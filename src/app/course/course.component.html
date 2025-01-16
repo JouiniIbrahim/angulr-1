@@ -1,0 +1,100 @@
+
+<div class="card">
+    <p-table
+        #dt1
+        [value]="ListCourse"
+        dataKey="id"
+        [rows]="5"
+        [rowsPerPageOptions]="[5, 10, 15]"
+        [loading]="loading"
+        [paginator]="true"
+        [globalFilterFields]="['name', 'description', 'category', 'published', 'level']"
+        >
+        <ng-template pTemplate="caption">
+            
+            <div class="flex">
+                <span class="p-input-icon-left ml-auto">
+                    
+                    <i class="pi pi-search"></i>
+                    <input pInputText type="text" [(ngModel)]="searchValue" (input)="onInputChange($event)" placeholder="Search keyword" />
+                    <p-button icon="pi pi-filter-slash"  class="p-button-rounded p-button-outlined" (click)="clear(dt1)" />
+                  </span>
+            </div>
+    
+        </ng-template>
+        <ng-template pTemplate="header" >
+            <tr>
+                <th  style="min-width:15rem">    
+                    <div class="flex items-center">
+                        Name
+                        <p-columnFilter type="text" field="name" display="menu" />
+                    </div>
+                </th>
+                <th style="min-width:15rem">
+                    <div class="flex items-center">
+                        description
+                        <p-columnFilter type="text" field="description" display="menu" />
+                    </div>
+                </th>
+                <th style="min-width:15rem">
+                    <div class="flex items-center">
+                        category
+                        <p-columnFilter type="text" field="category" display="menu" />
+                    </div>
+                </th>
+                <th style="min-width:10rem">
+                    <div class="flex items-center">
+                        published
+                        <p-columnFilter type="date" field="published" display="menu" />
+                    </div>
+                </th>
+                <th style="min-width:10rem">
+                    <div class="flex items-center">
+                        level
+                        <p-columnFilter type="text" field="level" display="menu" />
+                    </div>
+                </th>
+                <th style="min-width:10rem">
+                    <div class="flex items-center">Action</div>
+                  </th>
+            
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-course>
+            <tr>
+                <td>
+                    {{ course.name }}
+                </td>
+                <td>
+                    <div class="flex items-center gap-2">
+                    
+                    <span >{{ course.description }}</span>
+                    </div>
+                </td>
+                <td>
+                <div class="flex items-center gap-2">
+                   
+                    <span >{{ course.category }}</span>
+                    </div>
+                </td>
+                <td>
+                    {{ course.published | date: 'MM/dd/yyyy' }}
+                </td>
+                <td>
+                    {{ course.level  }}
+                </td>
+
+                <td>
+                    <button pButton icon="pi pi-search" class="p-button-rounded p-button-outlined" ></button>
+                    <button pButton icon="pi pi-pencil" class="p-button-rounded p-button-outlined"></button>
+                    <button pButton icon="pi pi-trash" class="p-button-rounded p-button-outlined"></button>
+                  </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage" >
+            <tr>
+                <td colspan="7">No courses found.</td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>
