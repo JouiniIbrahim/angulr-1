@@ -1,12 +1,7 @@
-import { ApplicationRef, Component, ComponentFactoryResolver, Injector, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
-
+import { ApplicationRef, Component, ComponentFactoryResolver, Injector, OnInit, ViewChild } from '@angular/core';
 import { Table } from 'primeng/table';
-
-
-
-
 import { AllMyServicesService } from '../../Services/all-my-services.service';
-import { Course } from '../models/Course';
+import { Course } from '../model/Course';
 import Swal from 'sweetalert2';
 import { GenericModalComponent } from '../../generic-modal/generic-modal.component';
 
@@ -43,6 +38,8 @@ export class CourseComponent implements OnInit {
   constructor(private Service: AllMyServicesService , private componentFactoryResolver: ComponentFactoryResolver,private appRef: ApplicationRef,
     private injector: Injector) { }
 
+
+    
   ngOnInit(): void {
 
     this.GetList();
@@ -73,9 +70,9 @@ export class CourseComponent implements OnInit {
     
   }
 
-  closeModal(): void {
-    this.showModal = false; 
-  }
+  /*------------------------modal managment --------------------------------------*/
+
+ 
 
   openViewModal(IdCourse: any): void {
     this.Service.CourseById(IdCourse).subscribe((course) =>{
@@ -133,13 +130,13 @@ export class CourseComponent implements OnInit {
     this.appRef.detachView(modalRef.hostView);
     modalRef.destroy();
   }
-
+/*------------------------clear search --------------------------------------*/
 
   clear(table: Table) {
     table.clear();
     this.searchValue = '';
   }
-
+/*------------------------Delete --------------------------------------*/
   DeleteCourse(IdCourse:any)
   {
     Swal.fire({
@@ -178,7 +175,11 @@ export class CourseComponent implements OnInit {
     });
 }
 
- // Handle save event from modal
+ 
+
+/*------------------------Add and edit --------------------------------------*/
+
+
  onSave(updatedCourse: any ): void {
   if (this.modalMode === 'add') {
     console.log('Adding new item:', );

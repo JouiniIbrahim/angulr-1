@@ -3,14 +3,14 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { CourseComponent } from './CourseModule/course/course.component';
+import { CourseComponent } from './course-module/course/course.component';
 
 
 import { TagModule } from 'primeng/tag';
 import { HttpClientModule } from '@angular/common/http';
 import { InputTextModule } from 'primeng/inputtext';
 import { MultiSelectModule } from 'primeng/multiselect';
-import { CommonModule } from '@angular/common';
+
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { BrowserAnimationsModule, provideAnimations } from '@angular/platform-browser/animations';
@@ -28,7 +28,6 @@ import { GenericModalComponent } from './generic-modal/generic-modal.component';
 @NgModule({
   declarations: [
     AppComponent,
-    CourseComponent,
     GenericModalComponent
     
     
@@ -38,7 +37,6 @@ import { GenericModalComponent } from './generic-modal/generic-modal.component';
     AppRoutingModule,
     TableModule,
     HttpClientModule, 
-    CommonModule,
     InputTextModule, 
     TagModule,
     MultiSelectModule,

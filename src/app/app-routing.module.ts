@@ -1,9 +1,10 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { CourseComponent } from './CourseModule/course/course.component';
+
 
 const routes: Routes = [
-  {path:"", component: CourseComponent }
+  
+  { path: '', loadChildren: () => import('./course-module/course-module.module').then(m => m.CourseModuleModule) }
 ];
 
 @NgModule({
