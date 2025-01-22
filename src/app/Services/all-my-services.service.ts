@@ -14,4 +14,26 @@ export class AllMyServicesService {
     return this.http.get(`${environment.baseUrl}/Course/AllCourses`);
   }
 
+  DeleteCourse(IdCourse: string)
+  {
+    return this.http.delete(`${environment.baseUrl}/Course/DeleteCourse/${IdCourse}`)  ;
+  }
+
+  UpdateCourse(Data: any)
+    {
+      return this.http.put(`${environment.baseUrl}/Course/UpdateCourse`, Data);
+    }
+
+    AddCourse(Data: any)
+    {
+      return this.http.post(`${environment.baseUrl}/Course/AddCourse`, Data);
+    }
+
+    CourseById(IdCourse:string)
+  {
+    return this.http.get(`${environment.baseUrl}/Course/OneCourse/${IdCourse}`);
+  }
+
+    
+
 }

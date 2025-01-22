@@ -1,0 +1,50 @@
+  <p-dialog
+  [header]="title"
+  [(visible)]="visible"
+  [modal]="true"
+  [style]="{ width: '70vw' }"
+  (onHide)="closeModal()"
+>
+<div >
+    <form>
+      <div class="p-fluid">
+        <div class="p-field"  *ngFor="let field of fields">
+          <label [for]="field.key">{{ field.label }}</label>
+          <ng-container [ngSwitch]="field.type">
+            <input
+              *ngSwitchCase="'text'"
+              [id]="field.key"
+              pInputText
+              [(ngModel)]="data[field.key]"
+              [name]="field.key"
+              [readonly]="mode === 'view'"
+            />
+            <textarea
+              *ngSwitchCase="'textarea'"
+              [id]="field.key"
+              pInputTextarea
+              [(ngModel)]="data[field.key]"
+              [name]="field.key"
+              [readonly]="mode === 'view'"
+            ></textarea>
+            <input
+              *ngSwitchCase="'date'"
+              [id]="field.key"
+              pInputText
+              [value]="data[field.key] | date: 'MM/dd/yyyy'"
+              [name]="field.key"
+              [readonly]="mode === 'view'"
+            />
+          </ng-container>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="flex justify-content-end gap-2">
+    <button *ngIf="mode === 'edit' || mode === 'add'" pButton type="button" label="Save" (click)="onSave()"></button>
+    <button pButton type="button" label="Close" (click)="closeModal()"></button>
+  </div>
+</p-dialog>
+
+
+  

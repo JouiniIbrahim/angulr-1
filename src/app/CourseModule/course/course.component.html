@@ -1,55 +1,72 @@
 
-<div class="card">
+
     <p-table
-        #dt1
+        #dt
         [value]="ListCourse"
         dataKey="id"
         [rows]="5"
         [rowsPerPageOptions]="[5, 10, 15]"
         [loading]="loading"
         [paginator]="true"
+        sortMode="multiple" 
         [globalFilterFields]="['name', 'description', 'category', 'published', 'level']"
         >
+        
         <ng-template pTemplate="caption">
             
-            <div class="flex">
-                <span class="p-input-icon-left ml-auto">
-                    
+            <div class="flex1">
+               
+                <span class="p-input-icon-left">
                     <i class="pi pi-search"></i>
                     <input pInputText type="text" [(ngModel)]="searchValue" (input)="onInputChange($event)" placeholder="Search keyword" />
-                    <p-button icon="pi pi-filter-slash"  class="p-button-rounded p-button-outlined" (click)="clear(dt1)" />
-                  </span>
+                    <p-button icon="pi pi-filter-slash" class="p-button-rounded p-button-outlined" (click)="clear(dt)" />
+                </span>
+            
+                <div>
+                    <button pButton icon="pi pi-pencil" label="Add Course" class="p-button-rounded p-button-lined" (click)="openAddModal()"></button>
+                </div>
             </div>
+            
     
         </ng-template>
-        <ng-template pTemplate="header" >
-            <tr>
-                <th  style="min-width:15rem">    
+        <ng-template  pTemplate="header" >
+            <tr  >
+                <th  pSortableColumn="name" style="min-width:15rem">    
+                    
                     <div class="flex items-center">
+                        <p-sortIcon field="name"></p-sortIcon>
                         Name
                         <p-columnFilter type="text" field="name" display="menu" />
+                        
+                        
+                        
+                       
                     </div>
                 </th>
-                <th style="min-width:15rem">
+                <th pSortableColumn="description" style="min-width:15rem">
                     <div class="flex items-center">
+                        <p-sortIcon field="description"></p-sortIcon>
                         description
                         <p-columnFilter type="text" field="description" display="menu" />
                     </div>
                 </th>
-                <th style="min-width:15rem">
+                <th pSortableColumn="category" style="min-width:15rem">
                     <div class="flex items-center">
+                        <p-sortIcon field="category"></p-sortIcon>
                         category
                         <p-columnFilter type="text" field="category" display="menu" />
                     </div>
                 </th>
-                <th style="min-width:10rem">
+                <th pSortableColumn="published" style="min-width:10rem">
                     <div class="flex items-center">
+                        <p-sortIcon field="published"></p-sortIcon>
                         published
                         <p-columnFilter type="date" field="published" display="menu" />
                     </div>
                 </th>
-                <th style="min-width:10rem">
+                <th pSortableColumn="level" style="min-width:10rem">
                     <div class="flex items-center">
+                        <p-sortIcon field="level"></p-sortIcon>
                         level
                         <p-columnFilter type="text" field="level" display="menu" />
                     </div>
@@ -60,7 +77,7 @@
             
             </tr>
         </ng-template>
-        <ng-template pTemplate="body" let-course>
+        <ng-template pTemplate="body" let-course [ttSortableColumn]="['name', 'description', 'category', 'published', 'level']" >
             <tr>
                 <td>
                     {{ course.name }}
@@ -79,22 +96,28 @@
                 </td>
                 <td>
                     {{ course.published | date: 'MM/dd/yyyy' }}
-                </td>
+                    
+                </td>   
                 <td>
-                    {{ course.level  }}
+                    {{course.level}}
                 </td>
 
                 <td>
-                    <button pButton icon="pi pi-search" class="p-button-rounded p-button-outlined" ></button>
-                    <button pButton icon="pi pi-pencil" class="p-button-rounded p-button-outlined"></button>
-                    <button pButton icon="pi pi-trash" class="p-button-rounded p-button-outlined"></button>
+                    <button pButton type="button" icon="pi pi-search" class="p-button-rounded p-button-outlined" (click)="openViewModal(course.id)" ></button>
+
+                    <button pButton icon="pi pi-pencil" class="p-button-rounded p-button-outlined" (click)="openEditModal(course.id)"></button>
+                    <button pButton icon="pi pi-trash" class="p-button-rounded p-button-outlined" (click)="DeleteCourse(course.id)"></button>
                   </td>
+                  
+              
             </tr>
-        </ng-template>
+          
+</ng-template>
+
         <ng-template pTemplate="emptymessage" >
             <tr>
                 <td colspan="7">No courses found.</td>
             </tr>
         </ng-template>
+        
     </p-table>
-</div>
