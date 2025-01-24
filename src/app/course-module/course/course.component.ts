@@ -1,9 +1,10 @@
 import { ApplicationRef, Component, ComponentFactoryResolver, Injector, OnInit, ViewChild } from '@angular/core';
 import { Table } from 'primeng/table';
-import { AllMyServicesService } from '../../Services/all-my-services.service';
+
 import { Course } from '../model/Course';
 import Swal from 'sweetalert2';
 import { GenericModalComponent } from '../../generic-modal/generic-modal.component';
+import { CourseServiceService } from '../course-service.service';
 
 
 @Component({
@@ -11,7 +12,7 @@ import { GenericModalComponent } from '../../generic-modal/generic-modal.compone
   templateUrl: './course.component.html',
   styleUrls: ['./course.component.scss'],
 
-  providers: [AllMyServicesService]
+  providers: [CourseServiceService]
 })
 export class CourseComponent implements OnInit {
   ListCourse!: Course[];
@@ -35,7 +36,7 @@ export class CourseComponent implements OnInit {
   ];
 
 
-  constructor(private Service: AllMyServicesService , private componentFactoryResolver: ComponentFactoryResolver,private appRef: ApplicationRef,
+  constructor(private Service: CourseServiceService , private componentFactoryResolver: ComponentFactoryResolver,private appRef: ApplicationRef,
     private injector: Injector) { }
 
 
