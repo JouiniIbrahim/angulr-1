@@ -4,8 +4,8 @@
     <div class="border-end bg-white" id="sidebar-wrapper">
         <div class="sidebar-heading border-bottom bg-light">Start Bootstrap</div>
         <div class="list-group list-group-flush">
-            <a class="list-group-item list-group-item-action list-group-item-light p-3" aria-selected="true">Course</a>
-            <a class="list-group-item list-group-item-action list-group-item-light p-3" routerLink="/user">User</a>
+            <a class="list-group-item list-group-item-action list-group-item-light p-3" routerLink="/course">Course</a>
+            <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#!">User</a>
             <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#!">Overview</a>
             <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#!">Events</a>
             <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#!">Profile</a>
@@ -40,14 +40,14 @@
         <!-- Page content-->
         <p-table
         #dt
-        [value]="ListCourse"
+        [value]="ListUser"
         dataKey="id"
         [rows]="5"
         [rowsPerPageOptions]="[5, 10, 15]"
         [loading]="loading"
         [paginator]="true"
         sortMode="multiple" 
-        [globalFilterFields]="['name', 'description', 'category', 'published', 'level']"
+        [globalFilterFields]="['firstname', 'lastname', 'email', 'roles']"
         >
         
         <ng-template pTemplate="caption">
@@ -61,7 +61,7 @@
                 </span>
             
                 <div>
-                    <button pButton icon="pi pi-pencil" label="Add Course" class="p-button-rounded p-button-lined" (click)="openAddModal()"></button>
+                    <button pButton icon="pi pi-pencil" label="Add User" class="p-button-rounded p-button-lined" (click)="openAddModal()"></button>
                 </div>
             </div>
             
@@ -69,44 +69,38 @@
         </ng-template>
         <ng-template  pTemplate="header" >
             <tr  >
-                <th  pSortableColumn="name" style="min-width:15rem">    
+                <th  pSortableColumn="firstname" style="min-width:15rem">    
                     
                     <div class="flex items-center">
-                        <p-sortIcon field="name"></p-sortIcon>
-                        Name
-                        <p-columnFilter type="text" field="name" display="menu" />
+                        <p-sortIcon field="firstname"></p-sortIcon>
+                        Firstname
+                        <p-columnFilter type="text" field="firstname" display="menu" />
                         
                         
                         
                        
                     </div>
                 </th>
-                <th pSortableColumn="description" style="min-width:15rem">
+                <th pSortableColumn="lastname" style="min-width:15rem">
                     <div class="flex items-center">
-                        <p-sortIcon field="description"></p-sortIcon>
-                        description
-                        <p-columnFilter type="text" field="description" display="menu" />
+                        <p-sortIcon field="lastname"></p-sortIcon>
+                        Lastname
+                        <p-columnFilter type="text" field="lastname" display="menu" />
                     </div>
                 </th>
-                <th pSortableColumn="category" style="min-width:15rem">
+                <th pSortableColumn="email" style="min-width:15rem">
                     <div class="flex items-center">
-                        <p-sortIcon field="category"></p-sortIcon>
-                        category
-                        <p-columnFilter type="text" field="category" display="menu" />
+                        <p-sortIcon field="email"></p-sortIcon>
+                        EMAIL
+                        <p-columnFilter type="text" field="email" display="menu" />
                     </div>
                 </th>
-                <th pSortableColumn="published" style="min-width:10rem">
+               
+                <th pSortableColumn="roles" style="min-width:10rem">
                     <div class="flex items-center">
-                        <p-sortIcon field="published"></p-sortIcon>
-                        published
-                        <p-columnFilter type="date" field="published" display="menu" />
-                    </div>
-                </th>
-                <th pSortableColumn="level" style="min-width:10rem">
-                    <div class="flex items-center">
-                        <p-sortIcon field="level"></p-sortIcon>
-                        level
-                        <p-columnFilter type="text" field="level" display="menu" />
+                        <p-sortIcon field="roles"></p-sortIcon>
+                        Roles
+                        <p-columnFilter type="text" field="roles" display="menu" />
                     </div>
                 </th>
                 <th style="min-width:10rem">
@@ -115,36 +109,35 @@
             
             </tr>
         </ng-template>
-        <ng-template pTemplate="body" let-course  >
+        <ng-template pTemplate="body" let-user  >
             <tr>
                 <td>
-                    {{ course.name }}
+                    {{ user.firstname }}
                 </td>
                 <td>
                     <div class="flex items-center gap-2">
                     
-                    <span >{{ course.description }}</span>
+                    <span >{{ user.lastname }}</span>
                     </div>
                 </td>
                 <td>
                 <div class="flex items-center gap-2">
                    
-                    <span >{{ course.category }}</span>
+                    <span >{{ user.email }}</span>
                     </div>
                 </td>
-                <td>
-                    {{ course.published | date: 'MM/dd/yyyy' }}
-                    
-                </td>   
-                <td>
-                    {{course.level}}
+                 
+                <td >
+                    <div *ngFor="let role of user.roles">
+                     {{role.name}}
+                    </div>
                 </td>
     
                 <td>
-                    <button pButton type="button" icon="pi pi-search" class="p-button-rounded p-button-outlined" (click)="openViewModal(course.id)" ></button>
+                    <button pButton type="button" icon="pi pi-search" class="p-button-rounded p-button-outlined" (click)="openViewModal(user.id)"  ></button>
     
-                    <button pButton icon="pi pi-pencil" class="p-button-rounded p-button-outlined" (click)="openEditModal(course.id)"></button>
-                    <button pButton icon="pi pi-trash" class="p-button-rounded p-button-outlined" (click)="DeleteCourse(course.id)"></button>
+                    <button pButton icon="pi pi-pencil" class="p-button-rounded p-button-outlined" (click)="openEditModal(user.id)"></button>
+                    <button pButton icon="pi pi-trash" class="p-button-rounded p-button-outlined" ></button>
                   </td>
                   
               
@@ -154,7 +147,7 @@
     
         <ng-template pTemplate="emptymessage" >
             <tr>
-                <td colspan="7">No courses found.</td>
+                <td colspan="7">No users found.</td>
             </tr>
         </ng-template>
         
