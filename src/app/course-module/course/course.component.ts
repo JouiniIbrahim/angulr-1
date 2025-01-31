@@ -28,11 +28,11 @@ export class CourseComponent implements OnInit {
 
 
   courseFields = [
-    { key: 'name', label: 'Name', type: 'text' },
-    { key: 'description', label: 'Description', type: 'textarea' },
-    { key: 'category', label: 'Category', type: 'text' },
-    { key: 'published', label: 'Published', type: 'date' },
-    { key: 'level', label: 'Level', type: 'text' }
+    { key: 'name', label: 'Name', type: 'text' , options: null},
+    { key: 'description', label: 'Description', type: 'textarea', options: null },
+    { key: 'category', label: 'Category', type: 'text', options: null },
+    { key: 'published', label: 'Published', type: 'date' , options: null},
+    { key: 'level', label: 'Level', type: 'text', options: null }
   ];
 
 

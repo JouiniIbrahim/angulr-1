@@ -1,16 +1,17 @@
-  <p-dialog
+<p-dialog
   [header]="title"
   [(visible)]="visible"
   [modal]="true"
   [style]="{ width: '70vw' }"
   (onHide)="closeModal()"
 >
-<div >
+  <div>
     <form>
       <div class="p-fluid">
-        <div class="p-field"  *ngFor="let field of fields">
+        <div class="p-field" *ngFor="let field of fields">
           <label [for]="field.key">{{ field.label }}</label>
           <ng-container [ngSwitch]="field.type">
+            <!-- Text Input -->
             <input
               *ngSwitchCase="'text'"
               [id]="field.key"
@@ -19,16 +20,19 @@
               [name]="field.key"
               [readonly]="mode === 'view'"
             />
+
+            
             <input
-  *ngSwitchCase="'password'"
-  [id]="field.key"
-  type="password"
-  pInputText
-  [(ngModel)]="data[field.key]"
-  [name]="field.key"
-  [readonly]="mode === 'view'"
-/>
-          
+              *ngSwitchCase="'password'"
+              [id]="field.key"
+              type="password"
+              pInputText
+              [(ngModel)]="data[field.key]"
+              [name]="field.key"
+              [readonly]="mode === 'edit' || mode === 'view'"
+            />
+
+            
             <textarea
               *ngSwitchCase="'textarea'"
               [id]="field.key"
@@ -37,15 +41,34 @@
               [name]="field.key"
               [readonly]="mode === 'view'"
             ></textarea>
-            <!-- <p-dropdown
-            *ngSwitchCase="'dropdown'"
-            [id]="field.key"
-            [(ngModel)]="data[field.key]"
-            [options]="field.options"
-            [name]="field.key"
-            [readonly]="mode === 'view'"
-            placeholder="Select an option"
-          ></p-dropdown> -->
+
+
+           <div *ngIf="!field.multiSelect">
+            <p-dropdown
+              *ngSwitchCase="'dropdown'"
+              [id]="field.key"
+              [(ngModel)]="data[field.key]"
+              [options]="field.options"
+              [name]="field.key"
+              [readonly]="mode === 'view'"
+              placeholder="Select an option"
+            ></p-dropdown>
+          </div>
+
+ <div *ngIf="field.multiSelect">
+           
+            <p-multiSelect [filter]="true" [showClear]="true" 
+              *ngSwitchCase="'dropdown'"
+              [id]="field.key"
+              [(ngModel)]="data[field.key]"
+              [options]="field.options"
+              [name]="field.key"
+              [readonly]="mode === 'view'"
+              placeholder="Select options" 
+            ></p-multiSelect>
+          </div>
+
+            <!-- Date Input -->
             <input
               *ngSwitchCase="'date'"
               [id]="field.key"
@@ -64,6 +87,3 @@
     <button pButton type="button" label="Close" (click)="closeModal()"></button>
   </div>
 </p-dialog>
-
-
-  

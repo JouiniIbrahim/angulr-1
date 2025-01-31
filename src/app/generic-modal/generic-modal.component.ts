@@ -1,5 +1,14 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 
+
+
+interface Field {
+  key: string;
+  label: string;
+  type: string;
+  options: { label: string | null; value: number | null }[] | null;
+  multiSelect?: boolean;
+}
 @Component({
   selector: 'app-generic-modal',
   templateUrl: './generic-modal.component.html',
@@ -9,11 +18,11 @@ export class GenericModalComponent implements OnInit{
   @Input() visible = false; 
   @Input() title = 'Modal Title'; 
   @Input() data: any; 
-  @Input() fields: { key: string, label: string, type: string }[] = []; 
+  @Input() fields: { key: string, label: string, type: string ,options :any |null ,multiSelect?: boolean;}[] = []; 
   @Output() visibleChange = new EventEmitter<boolean>(); 
   @Input() mode: 'view' | 'edit' | 'add' = 'view'; 
   @Output() save = new EventEmitter<any>(); 
-  
+
   ngOnInit(): void {
         console.log("*****");
 
