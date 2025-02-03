@@ -27,7 +27,7 @@ export class UserServiceService {
   UpdateUser(Data: any)
   {
     console.log("rrrrrrrrrrrrrrrrrrrrrr",Data)
-    return this.http.put(`${environment.baseUrl}/User/UpdateUser`, Data);
+    return this.http.put(`${environment.baseUrl}/User/UpdateUser/${Data.id}`, Data);
   }
 
   UserById(id:any){

@@ -1,4 +1,4 @@
-import { ApplicationRef, Component, ComponentFactoryResolver, Injector, OnInit, ViewChild } from '@angular/core';
+import { ApplicationRef, Component, ComponentFactoryResolver, Injector, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { User } from '../model/User';
 import { Table } from 'primeng/table';
 import { UserServiceService } from '../user-service.service';
@@ -32,16 +32,16 @@ export class UserModuleComponent implements OnInit {
   showModal = false;
 
   userFields: Field[] = [
-    { key: 'firstname', label: 'FirstName', type: 'text', options: null },
-    { key: 'lastname', label: 'LastName', type: 'text', options: null },
-    { key: 'username', label: 'UserName', type: 'text', options: null },
-    { key: 'password', label: 'Password', type: 'password', options: null },
-    { key: 'email', label: 'Email', type: 'text', options: null },
+    { key: 'firstname', label: 'FirstName', type: 'text', options: [] },
+    { key: 'lastname', label: 'LastName', type: 'text', options: [] },
+    { key: 'username', label: 'UserName', type: 'text', options: [] },
+    { key: 'password', label: 'Password', type: 'password', options: [] },
+    { key: 'email', label: 'Email', type: 'text', options: [] },
     {
       key: 'roles',
       label: 'Roles',
       type: 'dropdown',
-      options: null,
+      options: [], 
       multiSelect: true,
     },
   ];
@@ -49,6 +49,7 @@ export class UserModuleComponent implements OnInit {
   fields: Field[] = [];
 
   constructor(
+    private renderer: Renderer2,
     private Service: UserServiceService,
     private componentFactoryResolver: ComponentFactoryResolver,
     private appRef: ApplicationRef,
@@ -86,43 +87,35 @@ export class UserModuleComponent implements OnInit {
   }
 
   openAddModal(): void {
-    this.selectedUser = {};
+    this.selectedUser = { roles: [] };
     this.modalMode = 'add';
+  
     this.Service.AllRoles().subscribe((roles: Role[]) => {
       const roleOptions = roles.map((role) => ({
         label: role.name,
         value: role.id,
       }));
-
-      
+  
       const rolesField = this.userFields.find((field) => field.key === 'roles');
       if (rolesField) {
         rolesField.options = roleOptions;
       }
-
-      
+  
       this.fields = [...this.userFields];
-
-      
+      this.data = { ...this.selectedUser };
       this.showModalComponent();
     });
-  
   }
 
   openViewModal(id: any): void {
-    console.log('Opening view modal for user ID:', id);
-
     this.Service.UserById(id).subscribe((user: any) => {
       this.selectedUser = user;
       this.modalMode = 'view';
-
-      console.log("user--------",user);
-     
+  
       this.Service.AllRoles().subscribe((roles: Role[]) => {
         const roleOptions = roles.map((role) => ({
           label: role.name,
           value: role.id,
-          selected: this.selectedUser.roles.some((userRole: Role) => userRole.id === role.id),
         }));
   
         const rolesField = this.userFields.find((field) => field.key === 'roles');
@@ -131,29 +124,30 @@ export class UserModuleComponent implements OnInit {
         }
   
         this.fields = [...this.userFields];
+        this.data = { ...this.selectedUser };
         this.showModalComponent();
       });
     });
   }
-
-  openEditModal(id: any): void {
-    console.log('Opening edit modal for user ID:', id);
   
+  openEditModal(id: any): void {
     this.Service.UserById(id).subscribe((user: any) => {
       this.selectedUser = user;
       this.modalMode = 'edit';
-      console.log("user--------",user);
+  
       this.Service.AllRoles().subscribe((roles: Role[]) => {
-        const rolesWithSelection = roles.map((role) => ({
+        const roleOptions = roles.map((role) => ({
           label: role.name,
           value: role.id,
-          selected: this.selectedUser.roles.some((userRole: Role) => userRole.id === role.id),
         }));
-
-        
-        this.selectedUser.roles = rolesWithSelection;
-
-        
+  
+        const rolesField = this.userFields.find((field) => field.key === 'roles');
+        if (rolesField) {
+          rolesField.options = roleOptions;
+        }
+  
+        this.fields = [...this.userFields];
+        this.data = { ...this.selectedUser };
         this.showModalComponent();
       });
     });
@@ -162,28 +156,43 @@ export class UserModuleComponent implements OnInit {
   showModalComponent(): void {
     const modalFactory = this.componentFactoryResolver.resolveComponentFactory(GenericModalComponent);
     const modalRef = modalFactory.create(this.injector);
-
+  
     modalRef.instance.visible = true;
     modalRef.instance.title =
       this.modalMode === 'view' ? 'User Details' : this.modalMode === 'edit' ? 'Edit User' : 'Add User';
-    modalRef.instance.data = this.selectedUser;
-    modalRef.instance.fields = this.userFields;
+    modalRef.instance.data = this.data;
+    modalRef.instance.fields = this.fields;
     modalRef.instance.mode = this.modalMode;
-
+  
     modalRef.instance.visibleChange.subscribe((visible: boolean) => {
       if (!visible) {
         this.destroyModal(modalRef);
       }
     });
-
+  
     modalRef.instance.save.subscribe((updatedUser: any) => {
       this.onSave(updatedUser);
       this.destroyModal(modalRef);
     });
-
+  
     this.appRef.attachView(modalRef.hostView);
     const domElement = (modalRef.hostView as any).rootNodes[0] as HTMLElement;
     document.body.appendChild(domElement);
+  
+    // Use Renderer2 to attach the event listener
+    const saveButton = domElement.querySelector('.p-button[label="Save"]');
+    if (saveButton) {
+      this.renderer.listen(saveButton, 'click', () => {
+        modalRef.instance.onSave();
+      });
+    }
+  
+    const closeButton = domElement.querySelector('.p-button[label="Close"]');
+    if (closeButton) {
+      this.renderer.listen(closeButton, 'click', () => {
+        modalRef.instance.closeModal();
+      });
+    }
   }
 
   destroyModal(modalRef: any): void {
@@ -192,52 +201,26 @@ export class UserModuleComponent implements OnInit {
   }
 
   onSave(updatedUser: any): void {
-    // // Transform roles if necessary
-    // if (updatedUser.roles && updatedUser.roles.length > 0) {
-    //   updatedUser.roles = updatedUser.roles.map((role: any) => role.value || role.id);
-    // }
+    if (!updatedUser.id) {
+      updatedUser.id = this.selectedUser.id;
+    }
+    if (updatedUser.roles && updatedUser.roles.length > 0) {
+      updatedUser.roles = updatedUser.roles.map((role: any) => role.value || role.id);
+    }
+    console.log('user jdid ----------:', updatedUser);
   
-    if (this.modalMode === 'add') {
-      console.log('Adding new user:', updatedUser);
-  
-      this.Service.AddUser(updatedUser).subscribe(
+    if (this.modalMode === 'edit') {
+      this.Service.UpdateUser(updatedUser).subscribe(
         (res) => {
-          console.log('User created!');
+          console.log('User updated successfully:', res);
           this.GetList();
-          Swal.fire('Success!', 'User created successfully.', 'success');
+          Swal.fire('Success!', 'User updated successfully.', 'success');
         },
         (error) => {
-          console.error('Error creating user:', error);
-          Swal.fire('Error!', 'Failed to create user.', 'error');
+          console.error('Error updating user:', error);
+          Swal.fire('Error!', 'Failed to update user.', 'error');
         }
       );
-    } else if (this.modalMode === 'edit') {
-      Swal.fire({
-        title: 'Do you want to save the changes?',
-        showDenyButton: true,
-        showCancelButton: true,
-        confirmButtonText: 'Save',
-        denyButtonText: `Don't save`,
-      }).then((result) => {
-        if (result.isConfirmed) {
-
-          console.log('Updating user:', updatedUser);
-  
-          this.Service.UpdateUser(updatedUser).subscribe(
-            (Res: any) => {
-              console.log('User updated successfully:', Res);
-              this.GetList();
-              Swal.fire('Saved!', 'User updated successfully.', 'success');
-            },
-            (error: any) => {
-              console.error('Error updating user:', error);
-              Swal.fire('Error!', 'Failed to update user.', 'error');
-            }
-          );
-        } else if (result.isDenied) {
-          Swal.fire('Changes are not saved', '', 'info');
-        }
-      });
     }
   }
 }
