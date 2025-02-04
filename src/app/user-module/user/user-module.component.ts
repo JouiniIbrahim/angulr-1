@@ -206,10 +206,10 @@ export class UserModuleComponent implements OnInit {
     }
     if (updatedUser.roles && updatedUser.roles.length > 0) {
       updatedUser.roles = updatedUser.roles.map((role: any) => role.value || role.id);
+
     }
-    console.log('user jdid ----------:', updatedUser);
-  
-    if (this.modalMode === 'edit') {
+   
+ if (this.modalMode === 'edit') {
       this.Service.UpdateUser(updatedUser).subscribe(
         (res) => {
           console.log('User updated successfully:', res);
@@ -221,6 +221,19 @@ export class UserModuleComponent implements OnInit {
           Swal.fire('Error!', 'Failed to update user.', 'error');
         }
       );
+    } else  if (this.modalMode === 'add') {
+      console.log('Adding new item:', );
+      
+      this.Service.AddUser(updatedUser).subscribe(
+        (res)=>{console.log("User created !");
+          console.log('user jdid ----------:', updatedUser);
+          this.GetList(); 
+        },
+        (error)=>{console.log("User not created",error);
+         
+        }
+        
+      )
     }
   }
 }

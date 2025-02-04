@@ -25,7 +25,7 @@ export class GenericModalComponent implements OnInit {
 
   form: FormGroup;
 
-  constructor(private fb: FormBuilder, private cdr: ChangeDetectorRef) {
+  constructor(private fb: FormBuilder) {
     this.form = this.fb.group({});
   }
 
@@ -66,9 +66,12 @@ export class GenericModalComponent implements OnInit {
     this.visible = false;
     this.visibleChange.emit(this.visible);
   }
+
 onSave(): void {
   if (this.form.valid) {
     const formData = this.form.value;
+    formData.id=this.data.id;
+    console.log("formdata",formData);
 
     
     if (formData.roles) {

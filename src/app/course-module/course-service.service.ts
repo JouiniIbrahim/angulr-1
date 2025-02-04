@@ -22,6 +22,7 @@ export class CourseServiceService {
 
   UpdateCourse( Data: any)
     {
+      console.log("ffffffffffffff",Data)
       return this.http.put(`${environment.baseUrl}/Course/UpdateCourse`, Data);
     }
 

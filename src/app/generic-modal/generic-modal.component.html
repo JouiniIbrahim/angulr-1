@@ -40,8 +40,9 @@
             ></textarea>
 
            
-            <div *ngIf="!field.multiSelect">
-              <p-dropdown
+      <div *ngIf="!field.multiSelect">
+              
+        <p-dropdown
                 *ngSwitchCase="'dropdown'"
                 [id]="field.key"
                 [options]="field?.options || []"
@@ -54,17 +55,19 @@
 
           
 <div *ngIf="field.multiSelect">
-  <p-multiSelect
+        <p-multiSelect
     [filter]="true"
     [showClear]="true"
     *ngSwitchCase="'dropdown'"
     [id]="field.key"
     [options]="field.options || []"
-    display="chip"
-    [formControlName]="field.key"
+    
+  display="chip"
+[formControlName]="field.key"
     [readonly]="mode === 'view'"
     placeholder="Select options"
-  ></p-multiSelect>
+  >
+</p-multiSelect>
   
  
 </div>
