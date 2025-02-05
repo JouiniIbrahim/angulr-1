@@ -23,6 +23,7 @@ import { DialogModule } from 'primeng/dialog';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { GenericModalComponent } from './generic-modal/generic-modal.component';
 import { HomeComponent } from './home/home.component';
+import { ConfirmAccountComponent } from './confirm-account/confirm-account.component';
 
 
 
@@ -30,7 +31,8 @@ import { HomeComponent } from './home/home.component';
   declarations: [
     AppComponent,
     GenericModalComponent,
-    HomeComponent
+    HomeComponent,
+    ConfirmAccountComponent
     
     
   ],

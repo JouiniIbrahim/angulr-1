@@ -21,8 +21,13 @@ export class UserServiceService {
       AddUser(Data: any)
     {
       console.log("data to add ", Data)
-      return this.http.post(`${environment.baseUrl}/User/CreateUser1`, Data);
+      return this.http.post(`${environment.baseUrl}/User/AddUser`, Data);
     }
+    // AddUser1(Data: any)
+    // {
+    //   console.log("data to add ", Data)
+    //   return this.http.post(`${environment.baseUrl}/User/CreateUser1`, Data);
+    // }
     
     
   UpdateUser(Data: any)
