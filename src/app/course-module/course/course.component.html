@@ -5,14 +5,14 @@
         <div class="sidebar-heading border-bottom bg-light">Start Bootstrap</div>
         <div class="list-group list-group-flush">
             <a class="list-group-item list-group-item-action list-group-item-light p-3" aria-selected="true">Course</a>
-            <a class="list-group-item list-group-item-action list-group-item-light p-3" routerLink="/user">User</a>
+            <a class="list-group-item list-group-item-action list-group-item-light p-3" routerLink="/Administration/user">User</a>
             <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#!">Overview</a>
             <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#!">Events</a>
             <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#!">Profile</a>
             <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#!">Status</a>
         </div>
     </div>
- 
+
     <!-- Page content wrapper-->
     <div id="page-content-wrapper">
         <!-- Top navigation-->
@@ -46,39 +46,39 @@
         [rowsPerPageOptions]="[5, 10, 15]"
         [loading]="loading"
         [paginator]="true"
-        sortMode="multiple" 
+        sortMode="multiple"
         [globalFilterFields]="['name', 'description', 'category', 'published', 'level']"
         >
-        
+
         <ng-template pTemplate="caption">
-            
+
             <div class="flex1">
-               
+
                 <span class="p-input-icon-left">
                     <i class="pi pi-search"></i>
                     <input pInputText type="text" [(ngModel)]="searchValue" (input)="onInputChange($event)" placeholder="Search keyword" />
                     <p-button icon="pi pi-filter-slash" class="p-button-rounded p-button-outlined" (click)="clear(dt)" />
                 </span>
-            
+
                 <div>
                     <button pButton icon="pi pi-pencil" label="Add Course" class="p-button-rounded p-button-lined" (click)="openAddModal()"></button>
                 </div>
             </div>
-            
-    
+
+
         </ng-template>
         <ng-template  pTemplate="header" >
             <tr  >
-                <th  pSortableColumn="name" style="min-width:15rem">    
-                    
+                <th  pSortableColumn="name" style="min-width:15rem">
+
                     <div class="flex items-center">
                         <p-sortIcon field="name"></p-sortIcon>
                         Name
                         <p-columnFilter type="text" field="name" display="menu" />
-                        
-                        
-                        
-                       
+
+
+
+
                     </div>
                 </th>
                 <th pSortableColumn="description" style="min-width:15rem">
@@ -112,7 +112,7 @@
                 <th style="min-width:10rem">
                     <div class="flex items-center">Action</div>
                   </th>
-            
+
             </tr>
         </ng-template>
         <ng-template pTemplate="body" let-course  >
@@ -122,45 +122,45 @@
                 </td>
                 <td>
                     <div class="flex items-center gap-2">
-                    
+
                     <span >{{ course.description }}</span>
                     </div>
                 </td>
                 <td>
                 <div class="flex items-center gap-2">
-                   
+
                     <span >{{ course.category }}</span>
                     </div>
                 </td>
                 <td>
                     {{ course.published | date: 'MM/dd/yyyy' }}
-                    
-                </td>   
+
+                </td>
                 <td>
                     {{course.level}}
                 </td>
-    
+
                 <td>
                     <button pButton type="button" icon="pi pi-search" class="p-button-rounded p-button-outlined" (click)="openViewModal(course.id)" ></button>
-    
+
                     <button pButton icon="pi pi-pencil" class="p-button-rounded p-button-outlined" (click)="openEditModal(course.id)"></button>
                     <button pButton icon="pi pi-trash" class="p-button-rounded p-button-outlined" (click)="DeleteCourse(course.id)"></button>
                   </td>
-                  
-              
+
+
             </tr>
-          
+
     </ng-template>
-    
+
         <ng-template pTemplate="emptymessage" >
             <tr>
                 <td colspan="7">No courses found.</td>
             </tr>
         </ng-template>
-        
+
     </p-table>
 <!-- Bootstrap core JS-->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 <!-- Core theme JS-->
 <script src="js/scripts.js"></script>
-  
+

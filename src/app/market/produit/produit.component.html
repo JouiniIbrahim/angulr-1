@@ -1,0 +1,180 @@
+
+<div class="d-flex" id="wrapper">
+  <!-- Sidebar-->
+  <div class="border-end bg-white" id="sidebar-wrapper">
+    <div class="sidebar-heading border-bottom bg-light">Start Bootstrap</div>
+    <div class="list-group list-group-flush">
+      <a class="list-group-item list-group-item-action list-group-item-light p-3" href="course">Course</a>
+      <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#!">User</a>
+      <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#!">Overview</a>
+      <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#!">Events</a>
+      <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#!">Profile</a>
+      <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#!">Status</a>
+    </div>
+  </div>
+
+  <!-- Page content wrapper-->
+  <div id="page-content-wrapper">
+    <!-- Top navigation-->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+      <div class="container-fluid">
+        <button class="btn btn-primary" id="sidebarToggle">Toggle Menu</button>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav ms-auto mt-2 mt-lg-0">
+            <li class="nav-item active"><a class="nav-link" routerLink="/">Home</a></li>
+            <li class="nav-item"><a class="nav-link" href="#!">Link</a></li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown</a>
+              <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="#!">Action</a>
+                <a class="dropdown-item" href="#!">Another action</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#!">Something else here</a>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <!-- Page content-->
+    <p-table
+      #dt
+      [value]="ListProduit"
+      dataKey="id"
+      [rows]="5"
+      [rowsPerPageOptions]="[5, 10, 15]"
+      [loading]="loading"
+      [paginator]="true"
+      sortMode="multiple"
+      [globalFilterFields]="['nom', 'description', 'prix', 'tva','categorie']"
+    >
+
+      <ng-template pTemplate="caption">
+
+        <div class="flex1">
+
+                <span class="p-input-icon-left">
+                    <i class="pi pi-search"></i>
+                    <input pInputText type="text" [(ngModel)]="searchValue" (input)="onInputChange($event)" placeholder="Search keyword" />
+                    <p-button icon="pi pi-filter-slash" class="p-button-rounded p-button-outlined" (click)="clear(dt)" />
+                </span>
+
+          <div>
+            <button pButton icon="pi pi-pencil" label="Add User" class="p-button-rounded p-button-lined" (click)="openAddModal()"></button>
+          </div>
+        </div>
+
+
+      </ng-template>
+      <ng-template  pTemplate="header" >
+        <tr  >
+          <th  pSortableColumn="nom" style="min-width:15rem">
+
+            <div class="flex items-center">
+              <p-sortIcon field="nom"></p-sortIcon>
+              Name
+              <p-columnFilter type="text" field="nom" display="menu" />
+
+
+
+
+            </div>
+          </th>
+          <th pSortableColumn="description" style="min-width:15rem">
+            <div class="flex items-center">
+              <p-sortIcon field="description"></p-sortIcon>
+              Description
+              <p-columnFilter type="text" field="description" display="menu" />
+            </div>
+          </th>
+          <th pSortableColumn="prix" style="min-width:15rem">
+            <div class="flex items-center">
+              <p-sortIcon field="prix"></p-sortIcon>
+              Price
+              <p-columnFilter type="text" field="prix" display="menu" />
+            </div>
+          </th>
+
+          <th pSortableColumn="tva" style="min-width:10rem">
+            <div class="flex items-center">
+              <p-sortIcon field="tva"></p-sortIcon>
+              TVA
+              <p-columnFilter type="text" field="tva" display="menu" />
+            </div>
+          </th>
+          <th pSortableColumn="categorie" style="min-width:10rem">
+            <div class="flex items-center">
+              <p-sortIcon field="categorie"></p-sortIcon>
+              Category
+              <p-columnFilter type="text" field="categorie" display="menu" />
+            </div>
+          </th>
+          <!-- <th pSortableColumn="activated" style="min-width:15rem" >
+              <div class="flex items-center">
+                  <p-sortIcon field="activated"></p-sortIcon>
+              Status
+          </div>
+      </th> -->
+          <th style="min-width:10rem">
+            <div class="flex items-center">Action</div>
+          </th>
+
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-produit  >
+        <tr>
+          <td>
+            {{ produit.nom }}
+          </td>
+          <td>
+            <div class="flex items-center gap-2">
+
+              <span >{{ produit.description }}</span>
+            </div>
+          </td>
+          <td>
+            <div class="flex items-center gap-2">
+
+              <span >{{ produit.prix }}</span>
+            </div>
+          </td>
+          <td>
+            <div class="flex items-center gap-2">
+
+              <span >{{ produit.tva }}</span>
+            </div>
+          </td>
+
+          <td >
+            <div  >
+              {{produit.categorie.nom}}
+            </div>
+          </td>
+          <!-- <td>
+              <p-tag [value]="user.activated" [severity]="getSeverity(user.activated)" />
+          </td> -->
+
+          <td>
+            <button pButton type="button" icon="pi pi-search" class="p-button-rounded p-button-outlined" (click)="openViewModal(produit.id)"  ></button>
+
+            <button pButton icon="pi pi-pencil" class="p-button-rounded p-button-outlined" (click)="openEditModal(produit.id)"></button>
+            <button pButton icon="pi pi-trash" class="p-button-rounded p-button-outlined" (click)="DeleteProduit(produit.id)"></button>
+          </td>
+
+
+        </tr>
+
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage" >
+        <tr>
+          <td colspan="7">No users found.</td>
+        </tr>
+      </ng-template>
+
+    </p-table>
+    <!-- Bootstrap core JS-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Core theme JS-->
+    <script src="js/scripts.js"></script>

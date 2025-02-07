@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';  // Import ActivatedRoute
-import { AllMyServicesService } from '../Services/all-my-services.service';
-  
+import { AllMyServicesService } from '../../Services/all-my-services.service';
+import Swal from 'sweetalert2';
+
 @Component({
   selector: 'app-confirm-account',
   templateUrl: './confirm-account.component.html',
@@ -10,13 +11,13 @@ import { AllMyServicesService } from '../Services/all-my-services.service';
 })
 export class ConfirmAccountComponent implements OnInit {
   confirmForm: FormGroup;
-  actKey: string | null = null;  
+  actKey: string | null = null;
 
   constructor(
     private fb: FormBuilder,
     private Service: AllMyServicesService,
     private router: Router,
-    private route: ActivatedRoute  
+    private route: ActivatedRoute
   ) {
     this.confirmForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -29,7 +30,7 @@ export class ConfirmAccountComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
-      this.actKey = params['act_key'];  
+      this.actKey = params['act_key'];
       console.log('el key:', this.actKey);
     });
   }
@@ -57,7 +58,7 @@ export class ConfirmAccountComponent implements OnInit {
       const confirmationData = {
         email: formValues.email,
         password: formValues.password,
-        activation_key: this.actKey  
+        activation_key: this.actKey
       };
 
       console.log("Confirmation Data:", confirmationData);
@@ -65,9 +66,20 @@ export class ConfirmAccountComponent implements OnInit {
       this.Service.confirmAccount(confirmationData).subscribe(
         (response) => {
           console.log('Account confirmed successfully', response);
-          this.router.navigate(['user']);
+          Swal.fire({
+            title: "Account activated!",
+            text: "You can now login with your new password !",
+            icon: "success"
+          });
+
+          this.router.navigate(['']);
         },
         (error) => {
+          Swal.fire({
+            title: "Oops...",
+            text: "Check your email !",
+            icon: "error"
+          });
           console.error('Error confirming account', error);
         }
       );

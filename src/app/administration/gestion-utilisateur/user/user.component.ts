@@ -1,10 +1,22 @@
-import { ApplicationRef, Component, ComponentFactoryResolver, Injector, OnInit, Renderer2, ViewChild } from '@angular/core';
-import { User } from '../model/User';
-import { Table } from 'primeng/table';
-import { UserServiceService } from '../user-service.service';
-import { GenericModalComponent } from 'src/app/generic-modal/generic-modal.component';
-import Swal from 'sweetalert2';
-import { Role } from 'src/app/role-module/model/Role';
+import {
+  ApplicationRef,
+  Component,
+  ComponentFactoryResolver,
+  Injector,
+  OnInit,
+  Renderer2,
+  ViewChild
+}
+from '@angular/core';
+import {User} from "../model/User";
+import {Table} from "primeng/table";
+
+import {Role} from "../../../role-module/model/Role";
+import {GenericModalComponent} from "../../../generic-modal/generic-modal.component";
+import Swal from "sweetalert2";
+import {AdminstrationServiceService} from "../services/adminstration-service.service";
+
+
 
 interface Field {
   key: string;
@@ -13,13 +25,12 @@ interface Field {
   options: { label: string | null; value: number | null }[] | null;
   multiSelect?: boolean;
 }
-
 @Component({
-  selector: 'app-user-module',
-  templateUrl: './user-module.component.html',
-  styleUrls: ['./user-module.component.scss'],
+  selector: 'app-user',
+  templateUrl: './user.component.html',
+  styleUrls: ['./user.component.scss']
 })
-export class UserModuleComponent implements OnInit {
+export class UserComponent implements OnInit {
   ListUser!: User[];
   loading: boolean = true;
   searchValue: string | undefined;
@@ -41,7 +52,7 @@ export class UserModuleComponent implements OnInit {
       key: 'roles',
       label: 'Roles',
       type: 'dropdown',
-      options: [], 
+      options: [],
       multiSelect: true,
     },
   ];
@@ -50,7 +61,7 @@ export class UserModuleComponent implements OnInit {
 
   constructor(
     private renderer: Renderer2,
-    private Service: UserServiceService,
+    private Service: AdminstrationServiceService,
     private componentFactoryResolver: ComponentFactoryResolver,
     private appRef: ApplicationRef,
     private injector: Injector
@@ -89,18 +100,18 @@ export class UserModuleComponent implements OnInit {
   openAddModal(): void {
     this.selectedUser = { roles: [] };
     this.modalMode = 'add';
-  
+
     this.Service.AllRoles().subscribe((roles: Role[]) => {
       const roleOptions = roles.map((role) => ({
         label: role.name,
         value: role.id,
       }));
-  
+
       const rolesField = this.userFields.find((field) => field.key === 'roles');
       if (rolesField) {
         rolesField.options = roleOptions;
       }
-  
+
       this.fields = [...this.userFields];
       this.data = { ...this.selectedUser };
       this.showModalComponent();
@@ -111,41 +122,41 @@ export class UserModuleComponent implements OnInit {
     this.Service.UserById(id).subscribe((user: any) => {
       this.selectedUser = user;
       this.modalMode = 'view';
-  
+
       this.Service.AllRoles().subscribe((roles: Role[]) => {
         const roleOptions = roles.map((role) => ({
           label: role.name,
           value: role.id,
         }));
-  
+
         const rolesField = this.userFields.find((field) => field.key === 'roles');
         if (rolesField) {
           rolesField.options = roleOptions;
         }
-  
+
         this.fields = [...this.userFields];
         this.data = { ...this.selectedUser };
         this.showModalComponent();
       });
     });
   }
-  
+
   openEditModal(id: any): void {
     this.Service.UserById(id).subscribe((user: any) => {
       this.selectedUser = user;
       this.modalMode = 'edit';
-  
+
       this.Service.AllRoles().subscribe((roles: Role[]) => {
         const roleOptions = roles.map((role) => ({
           label: role.name,
           value: role.id,
         }));
-  
+
         const rolesField = this.userFields.find((field) => field.key === 'roles');
         if (rolesField) {
           rolesField.options = roleOptions;
         }
-  
+
         this.fields = [...this.userFields];
         this.data = { ...this.selectedUser };
         this.showModalComponent();
@@ -156,29 +167,29 @@ export class UserModuleComponent implements OnInit {
   showModalComponent(): void {
     const modalFactory = this.componentFactoryResolver.resolveComponentFactory(GenericModalComponent);
     const modalRef = modalFactory.create(this.injector);
-  
+
     modalRef.instance.visible = true;
     modalRef.instance.title =
       this.modalMode === 'view' ? 'User Details' : this.modalMode === 'edit' ? 'Edit User' : 'Add User';
     modalRef.instance.data = this.data;
     modalRef.instance.fields = this.fields;
     modalRef.instance.mode = this.modalMode;
-  
+
     modalRef.instance.visibleChange.subscribe((visible: boolean) => {
       if (!visible) {
         this.destroyModal(modalRef);
       }
     });
-  
+
     modalRef.instance.save.subscribe((updatedUser: any) => {
       this.onSave(updatedUser);
       this.destroyModal(modalRef);
     });
-  
+
     this.appRef.attachView(modalRef.hostView);
     const domElement = (modalRef.hostView as any).rootNodes[0] as HTMLElement;
     document.body.appendChild(domElement);
-  
+
     // Use Renderer2 to attach the event listener
     const saveButton = domElement.querySelector('.p-button[label="Save"]');
     if (saveButton) {
@@ -186,7 +197,7 @@ export class UserModuleComponent implements OnInit {
         modalRef.instance.onSave();
       });
     }
-  
+
     const closeButton = domElement.querySelector('.p-button[label="Close"]');
     if (closeButton) {
       this.renderer.listen(closeButton, 'click', () => {
@@ -208,8 +219,8 @@ export class UserModuleComponent implements OnInit {
       updatedUser.roles = updatedUser.roles.map((role: any) => role.value || role.id);
 
     }
-   
- if (this.modalMode === 'edit') {
+
+    if (this.modalMode === 'edit') {
       this.Service.UpdateUser(updatedUser).subscribe(
         (res) => {
           console.log('User updated successfully:', res);
@@ -223,17 +234,28 @@ export class UserModuleComponent implements OnInit {
       );
     } else  if (this.modalMode === 'add') {
       console.log('Adding new item:', );
-      
+
       this.Service.AddUser(updatedUser).subscribe(
         (res)=>{console.log("User created !");
           console.log('user jdid ----------:', updatedUser);
-          this.GetList(); 
+          this.GetList();
         },
         (error)=>{console.log("User not created",error);
-         
+
         }
-        
+
       )
     }
   }
+
+//   getSeverity(status: String ) {
+
+//     switch (status) {
+//         case '1':
+//             return 'success';
+
+//         case '0':
+//             return 'danger';
+//     }
+// }
 }
