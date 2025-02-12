@@ -21,9 +21,10 @@ import { DialogModule } from 'primeng/dialog';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { GenericModalComponent } from './generic-modal/generic-modal.component';
 import { HomeComponent } from './home/home.component';
-import { ConfirmAccountComponent } from './Connexion/confirm-account/confirm-account.component';
+import { ConfirmAccountComponent } from './connexion/confirm-account/confirm-account.component';
 import {TableModule} from "primeng/table";
 import {AdministrationModule} from "./administration/administration.module";
+import {ConnexionModule} from "./connexion/connexion.module";
 
 
 
@@ -32,7 +33,6 @@ import {AdministrationModule} from "./administration/administration.module";
     AppComponent,
     GenericModalComponent,
     HomeComponent,
-    ConfirmAccountComponent,
 
 
 
@@ -54,7 +54,8 @@ import {AdministrationModule} from "./administration/administration.module";
     ListboxModule,
     DialogModule,
     InputTextareaModule,
-    AdministrationModule
+    AdministrationModule,
+    ConnexionModule
 
 
 

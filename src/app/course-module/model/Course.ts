@@ -5,9 +5,10 @@ export class Course{
     category:string | null;
     published:Date | null;
     level:string | null;
+    support:string | null;
 
 
-   
+
    constructor(
 
     ){
@@ -17,6 +18,7 @@ export class Course{
     this.category=null;
     this.published=null;
     this.level=null;
+    this.support=null;
    }
 
 }

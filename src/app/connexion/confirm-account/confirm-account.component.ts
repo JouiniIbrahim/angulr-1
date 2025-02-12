@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';  // Import ActivatedRoute
-import { AllMyServicesService } from '../../Services/all-my-services.service';
 import Swal from 'sweetalert2';
+import {ConnexionServiceService} from "../services/connexion-service.service";
 
 @Component({
   selector: 'app-confirm-account',
@@ -15,7 +15,7 @@ export class ConfirmAccountComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private Service: AllMyServicesService,
+    private Service:ConnexionServiceService,
     private router: Router,
     private route: ActivatedRoute
   ) {
@@ -72,7 +72,7 @@ export class ConfirmAccountComponent implements OnInit {
             icon: "success"
           });
 
-          this.router.navigate(['']);
+          this.router.navigate(['login']);
         },
         (error) => {
           Swal.fire({

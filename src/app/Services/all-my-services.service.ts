@@ -10,10 +10,6 @@ export class AllMyServicesService {
 
   constructor(private http: HttpClient) { }
 
-  confirmAccount(Data: { email: string, password: string }): Observable<any>
-    {
-      return this.http.put(`${environment.baseUrl}/User/Confirm`, Data);
-    }
-    
+
 
 }

@@ -17,7 +17,7 @@ interface Field {
 export class GenericModalComponent implements OnInit {
   @Input() visible = false;
   @Input() title = 'Modal Title';
-  @Input() data: any = {}; 
+  @Input() data: any = {};
   @Input() fields: Field[] = [];
   @Output() visibleChange = new EventEmitter<boolean>();
   @Input() mode: 'view' | 'edit' | 'add' = 'view';
@@ -30,34 +30,32 @@ export class GenericModalComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    
+
 
     console.log('Fields in Modal:', this.fields);
     console.log('Data in Modal:', this.data);
     this.buildForm();
-  
-    
     console.log('Form Values:', this.form.value);
   }
 
   buildForm(): void {
     this.fields.forEach((field) => {
-      
+
       if (!field.options) {
         field.options = [];
       }
-  
-      
+
+
       if (field.key === 'roles' && this.data[field.key]) {
-        
+
         this.data[field.key] = this.data[field.key].map((role: any) => role.id);
       }
-  
-      
+
+
       const initialValue = this.data[field.key] || (field.multiSelect ? [] : null);
       this.form.addControl(field.key, new FormControl(initialValue));
-  
-      
+
+
       console.log(`FormControl for ${field.key}:`, this.form.get(field.key)?.value);
     });
   }
@@ -73,7 +71,7 @@ onSave(): void {
     formData.id=this.data.id;
     console.log("formdata",formData);
 
-    
+
     if (formData.roles) {
       formData.roles = formData.roles.map((roleId: number) => ({
         id: roleId,
@@ -81,7 +79,7 @@ onSave(): void {
       }));
     }
 
-   
+
     this.save.emit(formData);
     this.closeModal();
   }

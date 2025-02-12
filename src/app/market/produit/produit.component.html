@@ -61,7 +61,7 @@
                 </span>
 
           <div>
-            <button pButton icon="pi pi-pencil" label="Add User" class="p-button-rounded p-button-lined" (click)="openAddModal()"></button>
+            <button pButton icon="pi pi-pencil" label="Add Category" class="p-button-rounded p-button-lined" (click)="openAddModal()"></button>
           </div>
         </div>
 
@@ -101,6 +101,13 @@
               <p-sortIcon field="tva"></p-sortIcon>
               TVA
               <p-columnFilter type="text" field="tva" display="menu" />
+            </div>
+          </th>
+          <th pSortableColumn="prixTTC" style="min-width:10rem">
+            <div class="flex items-center">
+              <p-sortIcon field="prixTTC"></p-sortIcon>
+              TTC
+              <p-columnFilter type="text" field="prixTTC" display="menu" />
             </div>
           </th>
           <th pSortableColumn="categorie" style="min-width:10rem">
@@ -145,8 +152,14 @@
               <span >{{ produit.tva }}</span>
             </div>
           </td>
+          <td>
+            <div class="flex items-center gap-2">
 
-          <td >
+              <span >{{ produit.prixTTC }}</span>
+            </div>
+          </td>
+
+          <td>
             <div  >
               {{produit.categorie.nom}}
             </div>

@@ -1,0 +1,22 @@
+<div class="container">
+  <h2>Login</h2>
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+
+    <div class="form-group">
+      <label for="username">Email</label>
+      <input id="username" formControlName="username" type="text" class="form-control" placeholder="Enter your Username">
+      </div>
+
+
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input id="password" formControlName="password" type="password" class="form-control" placeholder="Enter your password">
+      <div *ngIf="password?.touched && password?.invalid" class="text-danger">
+        <div *ngIf="password?.errors?.['required']">Password is required.</div>
+        <div *ngIf="password?.errors?.['minlength']">Password must be at least 8 characters long.</div>
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary" [disabled]="loginForm.invalid">Login</button>
+  </form>
+</div>

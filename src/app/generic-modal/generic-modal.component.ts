@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
-import { ChangeDetectorRef } from '@angular/core';
+
 interface Field {
   key: string;
   label: string;
@@ -17,7 +17,7 @@ interface Field {
 export class GenericModalComponent implements OnInit {
   @Input() visible = false;
   @Input() title = 'Modal Title';
-  @Input() data: any = {}; 
+  @Input() data: any = {};
   @Input() fields: Field[] = [];
   @Output() visibleChange = new EventEmitter<boolean>();
   @Input() mode: 'view' | 'edit' | 'add' = 'view';
@@ -30,34 +30,26 @@ export class GenericModalComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    
-
     console.log('Fields in Modal:', this.fields);
     console.log('Data in Modal:', this.data);
     this.buildForm();
-  
-    
     console.log('Form Values:', this.form.value);
+    //
+    // if (this.mode === 'edit' && this.data.file) {
+    //   console.log('ffffffffffffffffff',this.setFileValue(this.data.file, 'support'));
+    //
+    // }
   }
 
   buildForm(): void {
     this.fields.forEach((field) => {
-      
       if (!field.options) {
         field.options = [];
       }
-  
-      
-      if (field.key === 'roles' && this.data[field.key]) {
-        
-        this.data[field.key] = this.data[field.key].map((role: any) => role.id);
-      }
-  
-      
+
       const initialValue = this.data[field.key] || (field.multiSelect ? [] : null);
       this.form.addControl(field.key, new FormControl(initialValue));
-  
-      
+
       console.log(`FormControl for ${field.key}:`, this.form.get(field.key)?.value);
     });
   }
@@ -67,23 +59,31 @@ export class GenericModalComponent implements OnInit {
     this.visibleChange.emit(this.visible);
   }
 
-onSave(): void {
-  if (this.form.valid) {
-    const formData = this.form.value;
-    formData.id=this.data.id;
-    console.log("formdata",formData);
+  onSave(): void {
+    if (this.form.valid) {
+      const formData = this.form.value;
+      formData.id = this.data.id;
+      console.log('formdata', formData);
 
-    
-    if (formData.roles) {
-      formData.roles = formData.roles.map((roleId: number) => ({
-        id: roleId,
-        name: this.fields.find((field) => field.key === 'roles')?.options?.find((option: any) => option.value === roleId)?.label,
-      }));
+      this.save.emit(formData);
+      this.closeModal();
     }
-
-   
-    this.save.emit(formData);
-    this.closeModal();
   }
-}
+
+  onFileChange(event: any, fieldKey: string): void {
+    const files = event.target.files;
+    if (files && files.length > 0) {
+
+      this.form.get(fieldKey)?.setValue(files);
+    }
+  }
+
+
+  setFileValue(file: File | null, fieldKey: string): void {
+    if (file) {
+      this.form.get(fieldKey)?.setValue([file]);
+    } else {
+      this.form.get(fieldKey)?.setValue(null);
+    }
+  }
 }

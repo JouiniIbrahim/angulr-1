@@ -11,16 +11,15 @@
         <div class="p-field" *ngFor="let field of fields">
           <label [for]="field.key">{{ field.label }}</label>
           <ng-container [ngSwitch]="field.type">
-            
             <input
               *ngSwitchCase="'text'"
               [id]="field.key"
               pInputText
               [formControlName]="field.key"
               [readonly]="mode === 'view'"
+              [required]="true"
             />
 
-            
             <input
               *ngSwitchCase="'password'"
               [id]="field.key"
@@ -28,57 +27,52 @@
               pInputText
               [formControlName]="field.key"
               [readonly]="mode === 'edit' || mode === 'view'"
+              [required]="true"
             />
 
-           
             <textarea
               *ngSwitchCase="'textarea'"
               [id]="field.key"
               pInputTextarea
               [formControlName]="field.key"
               [readonly]="mode === 'view'"
+              [required]="true"
             ></textarea>
 
-           
-      <div *ngIf="!field.multiSelect">
-              
-        <p-dropdown
+            <div *ngIf="!field.multiSelect">
+              <p-dropdown
                 *ngSwitchCase="'dropdown'"
                 [id]="field.key"
                 [options]="field?.options || []"
                 [formControlName]="field.key"
                 [readonly]="mode === 'view'"
                 placeholder="Select an option"
+                [required]="true"
               ></p-dropdown>
-              
             </div>
 
-          
-<div *ngIf="field.multiSelect">
-        <p-multiSelect
-    [filter]="true"
-    [showClear]="true"
-    *ngSwitchCase="'dropdown'"
-    [id]="field.key"
-    [options]="field.options || []"
-    
-  display="chip"
-[formControlName]="field.key"
-    [readonly]="mode === 'view'"
-    placeholder="Select options"
-  >
-</p-multiSelect>
-  
- 
-</div>
+            <div *ngIf="field.multiSelect">
+              <p-multiSelect
+                [filter]="true"
+                [showClear]="true"
+                *ngSwitchCase="'dropdown'"
+                [id]="field.key"
+                [options]="field.options || []"
+                display="chip"
+                [formControlName]="field.key"
+                [readonly]="mode === 'view'"
+                placeholder="Select options"
+                [required]="true"
+              ></p-multiSelect>
+            </div>
 
-            
             <input
               *ngSwitchCase="'date'"
               [id]="field.key"
               pInputText
               [value]="data[field.key] | date: 'MM/dd/yyyy'"
               [readonly]="mode === 'view'"
+              [required]="true"
             />
           </ng-container>
         </div>
@@ -86,7 +80,14 @@
     </form>
   </div>
   <div class="flex justify-content-end gap-2">
-    <button *ngIf="mode === 'edit' || mode === 'add'" pButton type="button" label="Save" (click)="onSave()"></button>
+    <button
+      *ngIf="mode === 'edit' || mode === 'add'"
+      pButton
+      type="button"
+      label="Save"
+      (click)="onSave()"
+      [disabled]="form.invalid"
+    ></button>
     <button pButton type="button" label="Close" (click)="closeModal()"></button>
   </div>
 </p-dialog>

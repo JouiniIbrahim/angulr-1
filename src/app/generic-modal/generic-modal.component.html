@@ -11,7 +11,7 @@
         <div class="p-field" *ngFor="let field of fields">
           <label [for]="field.key">{{ field.label }}</label>
           <ng-container [ngSwitch]="field.type">
-            
+
             <input
               *ngSwitchCase="'text'"
               [id]="field.key"
@@ -20,7 +20,7 @@
               [readonly]="mode === 'view'"
             />
 
-            
+
             <input
               *ngSwitchCase="'password'"
               [id]="field.key"
@@ -30,7 +30,7 @@
               [readonly]="mode === 'edit' || mode === 'view'"
             />
 
-           
+
             <textarea
               *ngSwitchCase="'textarea'"
               [id]="field.key"
@@ -39,10 +39,10 @@
               [readonly]="mode === 'view'"
             ></textarea>
 
-           
-      <div *ngIf="!field.multiSelect">
-              
-        <p-dropdown
+
+            <div *ngIf="!field.multiSelect">
+
+              <p-dropdown
                 *ngSwitchCase="'dropdown'"
                 [id]="field.key"
                 [options]="field?.options || []"
@@ -50,29 +50,57 @@
                 [readonly]="mode === 'view'"
                 placeholder="Select an option"
               ></p-dropdown>
-              
+
             </div>
 
-          
-<div *ngIf="field.multiSelect">
-        <p-multiSelect
-    [filter]="true"
-    [showClear]="true"
-    *ngSwitchCase="'dropdown'"
-    [id]="field.key"
-    [options]="field.options || []"
-    
-  display="chip"
-[formControlName]="field.key"
-    [readonly]="mode === 'view'"
-    placeholder="Select options"
-  >
-</p-multiSelect>
-  
- 
-</div>
 
-            
+            <div *ngIf="field.multiSelect">
+              <p-multiSelect
+                [filter]="true"
+                [showClear]="true"
+                *ngSwitchCase="'dropdown'"
+                [id]="field.key"
+                [options]="field.options || []"
+
+                display="chip"
+                [formControlName]="field.key"
+                [readonly]="mode === 'view'"
+                placeholder="Select options"
+              >
+              </p-multiSelect>
+
+
+            </div>
+
+<!--                        <p-fileUpload-->
+<!--                          name="demo[]"-->
+<!--                          url="https://www.primefaces.org/cdn/api/upload.php"-->
+<!--                          (onUpload)="onUpload($event)"-->
+<!--                          [multiple]="true"-->
+<!--                          accept="image/*"-->
+<!--                          maxFileSize="1000000">-->
+<!--                          <ng-template pTemplate="content">-->
+<!--                            <ul *ngIf="uploadedFiles.length">-->
+<!--                                <li *ngFor="let file of uploadedFiles">-->
+<!--                                  {{ file.name }} - {{ file.size }} bytes-->
+<!--                                </li>-->
+<!--                            </ul>-->
+<!--                          </ng-template>-->
+<!--                        </p-fileUpload>-->
+
+<!--             Regular file input -->
+
+            <input
+              *ngSwitchCase="'file'"
+              type="file"
+              [id]="field.key"
+              (change)="onFileChange($event, field.key)"
+              [readonly]="mode === 'view'"
+            />
+
+
+
+
             <input
               *ngSwitchCase="'date'"
               [id]="field.key"

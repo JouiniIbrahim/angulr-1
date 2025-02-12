@@ -28,12 +28,23 @@ export class CourseServiceService {
 
     AddCourse(Data: any)
     {
-      return this.http.post(`${environment.baseUrl}/Course/AddCourse`, Data);
+      console.log("ffffffffffffff",Data)
+      return this.http.post(`${environment.baseUrl}/Course/save`, Data);
     }
+
+  AddCourse1(Data: any)
+  {return this.http.post(`${environment.baseUrl}/Course/AddCourse`, Data);
+  }
 
     CourseById(IdCourse:string)
   {
     return this.http.get(`${environment.baseUrl}/Course/OneCourse/${IdCourse}`);
   }
+
+  getFile (IdCourse:string)
+  {
+    return this.http.get(`${environment.baseUrl}/Course/${IdCourse}`,{ responseType: 'arraybuffer' });
+  }
+
 
 }

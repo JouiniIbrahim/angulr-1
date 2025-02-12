@@ -49,6 +49,7 @@ export class ProduitComponent  implements OnInit {
     { key: 'description', label: 'description', type: 'text', options: [] },
     { key: 'prix', label: 'Price', type: 'text', options: [] },
     { key: 'tva', label: 'TVA', type: 'text', options: [] },
+    // { key: 'prixTTC', label: 'TTC', type: 'text', options: [] },
     {
       key: 'categorie',
       label: 'Categorie',
@@ -172,7 +173,7 @@ export class ProduitComponent  implements OnInit {
 
     modalRef.instance.visible = true;
     modalRef.instance.title =
-      this.modalMode === 'view' ? 'User Details' : this.modalMode === 'edit' ? 'Edit User' : 'Add User';
+      this.modalMode === 'view' ? 'Category Details' : this.modalMode === 'edit' ? 'Edit Category' : 'Add Categoryx';
     modalRef.instance.data = this.data;
     modalRef.instance.fields = this.fields;
     modalRef.instance.mode = this.modalMode;

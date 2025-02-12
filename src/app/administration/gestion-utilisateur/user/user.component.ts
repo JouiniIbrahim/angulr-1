@@ -12,9 +12,10 @@ import {User} from "../model/User";
 import {Table} from "primeng/table";
 
 import {Role} from "../../../role-module/model/Role";
-import {GenericModalComponent} from "../../../generic-modal/generic-modal.component";
+
 import Swal from "sweetalert2";
 import {AdminstrationServiceService} from "../services/adminstration-service.service";
+import {GenericModalComponent} from "../generic-modal-user/generic-modal.component";
 
 
 
