@@ -3,23 +3,23 @@ export class CourseDto {
   description: string | null;
   category: string | null;
   level: string | null;
-  support: string | null;
+  file: string | null;
 
   constructor() {
     this.name = null;
     this.description = null;
     this.category = null;
     this.level = null;
-    this.support = null;
+    this.file = null;
   }
 }
 
 export class CourseWithFileDto {
   courseDto: CourseDto | null;
-  support: File | null;
+  file: File | null;
 
   constructor() {
     this.courseDto = new CourseDto();
-    this.support = null;
+    this.file = null;
   }
 }

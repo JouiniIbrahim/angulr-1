@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import {NgModule, NO_ERRORS_SCHEMA} from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { CourseModuleRoutingModule } from './course-module-routing.module';
@@ -21,14 +21,14 @@ import { CourseComponent } from './course/course.component';
 @NgModule({
   declarations: [
     CourseComponent
-    
+
   ],
   imports: [
     CommonModule,
     CourseModuleRoutingModule,
     TableModule,
-    HttpClientModule, 
-    InputTextModule, 
+    HttpClientModule,
+    InputTextModule,
     TagModule,
     MultiSelectModule,
     ButtonModule,
@@ -38,6 +38,7 @@ import { CourseComponent } from './course/course.component';
     ListboxModule,
     DialogModule,
     InputTextareaModule
-  ]
+  ],
+  schemas: [NO_ERRORS_SCHEMA],
 })
 export class CourseModuleModule { }

@@ -5,6 +5,7 @@ import {Course} from '../model/Course';
 import Swal from 'sweetalert2';
 import {GenericModalComponent} from '../../generic-modal/generic-modal.component';
 import {CourseServiceService} from '../course-service.service';
+import {DomSanitizer} from "@angular/platform-browser";
 
 
 @Component({
@@ -24,7 +25,8 @@ export class CourseComponent implements OnInit {
   selectedCourse: any;
   course!: Course;
   modalMode: 'view' | 'edit' | 'add' = 'view';
-  showModal = false;
+  filePreview: any = null;  // Store sanitized file URL
+  showModal: boolean = false;
 
 
   courseFields = [
@@ -33,12 +35,12 @@ export class CourseComponent implements OnInit {
     {key: 'category', label: 'Category', type: 'text', options: null},
     {key: 'published', label: 'Published', type: 'date', options: null},
     {key: 'level', label: 'Level', type: 'text', options: null},
-    {key: 'support', label: 'Support', type: 'file', options: null}
+    {key: 'file', label: 'Support', type: 'file', options: null}
   ];
 
 
   constructor(private Service: CourseServiceService, private componentFactoryResolver: ComponentFactoryResolver, private appRef: ApplicationRef,
-              private injector: Injector) {
+              private injector: Injector, private sanitizer: DomSanitizer) {
   }
 
 
@@ -72,24 +74,68 @@ export class CourseComponent implements OnInit {
 
   }
 
-  // downloadFile(IdCourse: string): void {
-  //   this.Service.getFile(IdCourse).subscribe(
-  //     (data: ArrayBuffer) => {
-  //       const blob = new Blob([data], { type: 'application/pdf'});
-  //       const downloadUrl = window.URL.createObjectURL(blob);
-  //       const a = document.createElement('a');
-  //       a.href = downloadUrl;
-  //       a.download = IdCourse;
-  //       window.URL.revokeObjectURL(downloadUrl);
-  //     },
-  //     error => {
-  //       console.error("Error downloading file", error);
-  //     }
-  //   );
-  // }
+/*------------------------------------------file management----------------------------------------------*/
+  displayFile(id: number) {
+    this.Service.viewFile(id).subscribe(
+      (fileBlob) => {
+        const fileURL = window.URL.createObjectURL(fileBlob);
+        const contentType = fileBlob.type;
+
+        if (contentType.includes('pdf')) {
+          this.filePreview = this.sanitizer.bypassSecurityTrustResourceUrl(fileURL);
+        } else if (contentType.includes('image')) {
+          this.filePreview = this.sanitizer.bypassSecurityTrustResourceUrl(fileURL);
+        } else {
+          console.error('Unsupported file type:', contentType);
+          return;
+        }
+
+        this.showModal = true;
+      },
+      (error) => {
+        console.error('Error fetching file for preview:', error);
+      }
+    );
+  }
+
+  // Close the modal
+  closeModal() {
+    this.showModal = false;
+    this.filePreview = null; // Clear the file preview
+  }
 
 
+  downloadFile(id: number) {
+    this.Service.getFile(id).subscribe(
+      (fileBlob) => {
+        // Handle successful file download
+        const fileURL = window.URL.createObjectURL(fileBlob);
+        const a = document.createElement('a');
+        a.href = fileURL;
+        a.download = `file-${id}`;
+        a.click();
+        window.URL.revokeObjectURL(fileURL); // Revoke the object URL after download
+      },
+      (error) => {
+        console.error('Error downloading file:', error);
 
+
+        if (error.error instanceof Blob) {
+          const reader = new FileReader();
+          reader.onload = () => {
+            console.error('Error response body:', reader.result);
+          };
+          reader.onerror = (readerError) => {
+            console.error('Error reading Blob:', readerError);
+          };
+          reader.readAsText(error.error);
+        } else {
+          console.error('Unknown error type:', error);
+          console.error('Full error details:', error);
+        }
+      }
+    );
+  }
 
   /*------------------------modal managment --------------------------------------*/
 
@@ -197,9 +243,6 @@ export class CourseComponent implements OnInit {
   }
 
 
-
-
-
   /*------------------------Add and edit --------------------------------------*/
 
 
@@ -213,15 +256,15 @@ export class CourseComponent implements OnInit {
         description: updatedCourse.description,
         category: updatedCourse.category,
         level: updatedCourse.level,
-        support: null,
+        file: null,
       };
       formData.append('courseDto.name', courseDto.name);
       formData.append('courseDto.description', courseDto.description);
       formData.append('courseDto.category', courseDto.category);
       formData.append('courseDto.level', courseDto.level);
-      const fileInput = updatedCourse.support;
+      const fileInput = updatedCourse.file;
       if (fileInput && fileInput.length > 0) {
-        formData.append('support', fileInput[0], fileInput[0].name);
+        formData.append('file', fileInput[0], fileInput[0].name);
       }
       this.Service.AddCourse(formData).subscribe(
         (res) => {
@@ -239,7 +282,7 @@ export class CourseComponent implements OnInit {
         description: updatedCourse.description,
         category: updatedCourse.category,
         level: updatedCourse.level,
-        support: null,
+        file: null,
       };
       Swal.fire({
         title: "Do you want to save the changes?",
@@ -254,9 +297,9 @@ export class CourseComponent implements OnInit {
           formData.append('courseDto.description', courseDto.description);
           formData.append('courseDto.category', courseDto.category);
           formData.append('courseDto.level', courseDto.level);
-          const fileInput = updatedCourse.support;
+          const fileInput = updatedCourse.file;
           if (fileInput && fileInput.length > 0) {
-            formData.append('support', fileInput[0], fileInput[0].name);
+            formData.append('file', fileInput[0], fileInput[0].name);
           }
           this.Service.UpdateCourse(formData).subscribe(
             (res) => {

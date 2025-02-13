@@ -97,17 +97,18 @@
               (change)="onFileChange($event, field.key)"
               [readonly]="mode === 'view'"
             />
-
-
-
-
-            <input
+        <input
               *ngSwitchCase="'date'"
               [id]="field.key"
               pInputText
               [value]="data[field.key] | date: 'MM/dd/yyyy'"
               [readonly]="mode === 'view'"
             />
+
+            <div *ngIf="fileContent">
+              <h4>File Content:</h4>
+              <pre>{{ fileContent }}</pre> <!-- Display the file content here -->
+            </div>
           </ng-container>
         </div>
       </div>

@@ -25,6 +25,9 @@ export class GenericModalComponent implements OnInit {
 
   form: FormGroup;
 
+  // Add this property to store file content to display
+  fileContent: string | null = null;
+
   constructor(private fb: FormBuilder) {
     this.form = this.fb.group({});
   }
@@ -34,11 +37,6 @@ export class GenericModalComponent implements OnInit {
     console.log('Data in Modal:', this.data);
     this.buildForm();
     console.log('Form Values:', this.form.value);
-    //
-    // if (this.mode === 'edit' && this.data.file) {
-    //   console.log('ffffffffffffffffff',this.setFileValue(this.data.file, 'support'));
-    //
-    // }
   }
 
   buildForm(): void {
@@ -73,17 +71,25 @@ export class GenericModalComponent implements OnInit {
   onFileChange(event: any, fieldKey: string): void {
     const files = event.target.files;
     if (files && files.length > 0) {
+      // Read file content if it's a text file
+      const file = files[0];
+      if (file.type.startsWith('text')) {
+        const reader = new FileReader();
+        reader.onload = () => {
+          this.fileContent = reader.result as string; // Store the file content
+        };
+        reader.readAsText(file);
+      }
 
       this.form.get(fieldKey)?.setValue(files);
     }
   }
 
-
-  setFileValue(file: File | null, fieldKey: string): void {
-    if (file) {
-      this.form.get(fieldKey)?.setValue([file]);
-    } else {
-      this.form.get(fieldKey)?.setValue(null);
-    }
-  }
+  // setFileValue(file: File | null, fieldKey: string): void {
+  //   if (file) {
+  //     this.form.get(fieldKey)?.setValue([file]);
+  //   } else {
+  //     this.form.get(fieldKey)?.setValue(null);
+  //   }
+  // }
 }

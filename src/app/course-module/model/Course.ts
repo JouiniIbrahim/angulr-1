@@ -5,7 +5,7 @@ export class Course{
     category:string | null;
     published:Date | null;
     level:string | null;
-    support:string | null;
+     file :File | null;
 
 
 
@@ -18,7 +18,8 @@ export class Course{
     this.category=null;
     this.published=null;
     this.level=null;
-    this.support=null;
+    this.file=null;
+
    }
 
 }

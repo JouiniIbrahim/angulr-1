@@ -1,170 +1,199 @@
-
 <div class="d-flex" id="wrapper">
-    <!-- Sidebar-->
-    <div class="border-end bg-white" id="sidebar-wrapper">
-        <div class="sidebar-heading border-bottom bg-light">Start Bootstrap</div>
-        <div class="list-group list-group-flush">
-            <a class="list-group-item list-group-item-action list-group-item-light p-3" aria-selected="true">Course</a>
-            <a class="list-group-item list-group-item-action list-group-item-light p-3" routerLink="/user">User</a>
-            <a class="list-group-item list-group-item-action list-group-item-light p-3" href="/Market">Produit</a>
-            <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#!">Events</a>
-            <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#!">Profile</a>
-            <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#!">Status</a>
-        </div>
+  <!-- Sidebar-->
+  <div class="border-end bg-white" id="sidebar-wrapper">
+    <div class="sidebar-heading border-bottom bg-light">Start Bootstrap</div>
+    <div class="list-group list-group-flush">
+      <a class="list-group-item list-group-item-action list-group-item-light p-3" aria-selected="true">Course</a>
+      <a class="list-group-item list-group-item-action list-group-item-light p-3" routerLink="/user">User</a>
+      <a class="list-group-item list-group-item-action list-group-item-light p-3" href="/Market">Produit</a>
+      <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#!">Events</a>
+      <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#!">Profile</a>
+      <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#!">Status</a>
     </div>
+  </div>
 
-    <!-- Page content wrapper-->
-    <div id="page-content-wrapper">
-        <!-- Top navigation-->
-        <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
-            <div class="container-fluid">
-                <button class="btn btn-primary" id="sidebarToggle">Toggle Menu</button>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav ms-auto mt-2 mt-lg-0">
-                        <li class="nav-item active"><a class="nav-link" routerLink="/">Home</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#!">Link</a></li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown</a>
-                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="#!">Action</a>
-                                <a class="dropdown-item" href="#!">Another action</a>
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#!">Something else here</a>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-        <!-- Page content-->
-        <p-table
-        #dt
-        [value]="ListCourse"
-        dataKey="id"
-        [rows]="5"
-        [rowsPerPageOptions]="[5, 10, 15]"
-        [loading]="loading"
-        [paginator]="true"
-        sortMode="multiple"
-        [globalFilterFields]="['name', 'description', 'category', 'published', 'level']"
-        >
+  <!-- Page content wrapper-->
+  <div id="page-content-wrapper">
+    <!-- Top navigation-->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+      <div class="container-fluid">
+        <button class="btn btn-primary" id="sidebarToggle">Toggle Menu</button>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span
+          class="navbar-toggler-icon"></span></button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav ms-auto mt-2 mt-lg-0">
+            <li class="nav-item active"><a class="nav-link" routerLink="/">Home</a></li>
+            <li class="nav-item"><a class="nav-link" href="#!">Link</a></li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown"
+                 aria-haspopup="true" aria-expanded="false">Dropdown</a>
+              <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="#!">Action</a>
+                <a class="dropdown-item" href="#!">Another action</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#!">Something else here</a>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <!-- Page content-->
+    <p-table
+      #dt
+      [value]="ListCourse"
+      dataKey="id"
+      [rows]="5"
+      [rowsPerPageOptions]="[5, 10, 15]"
+      [loading]="loading"
+      [paginator]="true"
+      sortMode="multiple"
+      [globalFilterFields]="['name', 'description', 'category', 'published', 'level']"
+    >
 
-        <ng-template pTemplate="caption">
+      <ng-template pTemplate="caption">
 
-            <div class="flex1">
+        <div class="flex1">
 
                 <span class="p-input-icon-left">
                     <i class="pi pi-search"></i>
-                    <input pInputText type="text" [(ngModel)]="searchValue" (input)="onInputChange($event)" placeholder="Search keyword" />
-                    <p-button icon="pi pi-filter-slash" class="p-button-rounded p-button-outlined" (click)="clear(dt)" />
+                    <input pInputText type="text" [(ngModel)]="searchValue" (input)="onInputChange($event)"
+                           placeholder="Search keyword"/>
+                    <p-button icon="pi pi-filter-slash" class="p-button-rounded p-button-outlined" (click)="clear(dt)"/>
                 </span>
 
-                <div>
-                    <button pButton icon="pi pi-pencil" label="Add Course" class="p-button-rounded p-button-lined" (click)="openAddModal()"></button>
-                </div>
+          <div>
+            <button pButton icon="pi pi-pencil" label="Add Course" class="p-button-rounded p-button-lined"
+                    (click)="openAddModal()"></button>
+          </div>
+        </div>
+
+
+      </ng-template>
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="name" style="min-width:15rem">
+
+            <div class="flex items-center">
+              <p-sortIcon field="name"></p-sortIcon>
+              Name
+              <p-columnFilter type="text" field="name" display="menu"/>
+
+
             </div>
+          </th>
+          <th pSortableColumn="description" style="min-width:15rem">
+            <div class="flex items-center">
+              <p-sortIcon field="description"></p-sortIcon>
+              description
+              <p-columnFilter type="text" field="description" display="menu"/>
+            </div>
+          </th>
+          <th pSortableColumn="category" style="min-width:15rem">
+            <div class="flex items-center">
+              <p-sortIcon field="category"></p-sortIcon>
+              category
+              <p-columnFilter type="text" field="category" display="menu"/>
+            </div>
+          </th>
+          <th pSortableColumn="published" style="min-width:10rem">
+            <div class="flex items-center">
+              <p-sortIcon field="published"></p-sortIcon>
+              published
+              <p-columnFilter type="date" field="published" display="menu"/>
+            </div>
+          </th>
+          <th pSortableColumn="level" style="min-width:10rem">
+            <div class="flex items-center">
+              <p-sortIcon field="level"></p-sortIcon>
+              level
+              <p-columnFilter type="text" field="level" display="menu"/>
+            </div>
+          </th>
+          <th style="min-width:10rem">
+            <div class="flex items-center">Action</div>
+          </th>
+
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-course>
+        <tr>
+          <td>
+            {{ course.name }}
+          </td>
+          <td>
+            <div class="flex items-center gap-2">
+
+              <span>{{ course.description }}</span>
+            </div>
+          </td>
+          <td>
+            <div class="flex items-center gap-2">
+
+              <span>{{ course.category }}</span>
+            </div>
+          </td>
+          <td>
+            {{ course.published | date: 'MM/dd/yyyy' }}
+
+          </td>
+          <td>
+            {{ course.level }}
+          </td>
+
+          <td>
 
 
-        </ng-template>
-        <ng-template  pTemplate="header" >
-            <tr  >
-                <th  pSortableColumn="name" style="min-width:15rem">
+            <button pButton type="button" icon="pi pi-eye" class="p-button-rounded p-button-outlined"
+                    (click)="displayFile(course.id)"> Preview File
+            </button>
 
-                    <div class="flex items-center">
-                        <p-sortIcon field="name"></p-sortIcon>
-                        Name
-                        <p-columnFilter type="text" field="name" display="menu" />
+            <button pButton type="button" icon="pi pi-download" class="p-button-rounded p-button-outlined"
+                    (click)="downloadFile(course.id)"></button>
 
+            <button pButton type="button" icon="pi pi-search" class="p-button-rounded p-button-outlined"
+                    (click)="openViewModal(course.id)"></button>
 
-
-
-                    </div>
-                </th>
-                <th pSortableColumn="description" style="min-width:15rem">
-                    <div class="flex items-center">
-                        <p-sortIcon field="description"></p-sortIcon>
-                        description
-                        <p-columnFilter type="text" field="description" display="menu" />
-                    </div>
-                </th>
-                <th pSortableColumn="category" style="min-width:15rem">
-                    <div class="flex items-center">
-                        <p-sortIcon field="category"></p-sortIcon>
-                        category
-                        <p-columnFilter type="text" field="category" display="menu" />
-                    </div>
-                </th>
-                <th pSortableColumn="published" style="min-width:10rem">
-                    <div class="flex items-center">
-                        <p-sortIcon field="published"></p-sortIcon>
-                        published
-                        <p-columnFilter type="date" field="published" display="menu" />
-                    </div>
-                </th>
-                <th pSortableColumn="level" style="min-width:10rem">
-                    <div class="flex items-center">
-                        <p-sortIcon field="level"></p-sortIcon>
-                        level
-                        <p-columnFilter type="text" field="level" display="menu" />
-                    </div>
-                </th>
-                <th style="min-width:10rem">
-                    <div class="flex items-center">Action</div>
-                  </th>
-
-            </tr>
-        </ng-template>
-        <ng-template pTemplate="body" let-course  >
-            <tr>
-                <td>
-                    {{ course.name }}
-                </td>
-                <td>
-                    <div class="flex items-center gap-2">
-
-                    <span >{{ course.description }}</span>
-                    </div>
-                </td>
-                <td>
-                <div class="flex items-center gap-2">
-
-                    <span >{{ course.category }}</span>
-                    </div>
-                </td>
-                <td>
-                    {{ course.published | date: 'MM/dd/yyyy' }}
-
-                </td>
-                <td>
-                    {{course.level}}
-                </td>
-
-                <td>
-
-                <button pButton type="button" icon="pi pi-download" class="p-button-rounded p-button-outlined" ></button>
+            <button pButton icon="pi pi-pencil" class="p-button-rounded p-button-outlined"
+                    (click)="openEditModal(course.id)"></button>
+            <button pButton icon="pi pi-trash" class="p-button-rounded p-button-outlined"
+                    (click)="DeleteCourse(course.id)"></button>
+          </td>
 
 
-              <button pButton type="button" icon="pi pi-search" class="p-button-rounded p-button-outlined" (click)="openViewModal(course.id)" ></button>
+        </tr>
 
-                    <button pButton icon="pi pi-pencil" class="p-button-rounded p-button-outlined" (click)="openEditModal(course.id)"></button>
-                    <button pButton icon="pi pi-trash" class="p-button-rounded p-button-outlined" (click)="DeleteCourse(course.id)"></button>
-                  </td>
+      </ng-template>
 
 
-            </tr>
-
-    </ng-template>
-
-        <ng-template pTemplate="emptymessage" >
-            <tr>
-                <td colspan="7">No courses found.</td>
-            </tr>
-        </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="7">No courses found.</td>
+        </tr>
+      </ng-template>
 
     </p-table>
-<!-- Bootstrap core JS-->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-<!-- Core theme JS-->
-<script src="js/scripts.js"></script>
+
+
+    <div *ngIf="showModal" class="modal-overlay">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>File Preview</h3>
+          <button (click)="closeModal()">Close</button>
+        </div>
+
+        <div class="modal-body">
+          <div *ngIf="filePreview">
+  <!--<iframe  [src]="filePreview" width="100%" height="600px"></iframe>-->
+            <img *ngIf="filePreview?.type === 'image'" [src]="filePreview" width="100%"/>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap core JS-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Core theme JS-->
+    <script src="js/scripts.js"></script>
 
