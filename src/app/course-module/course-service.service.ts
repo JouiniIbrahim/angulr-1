@@ -35,7 +35,7 @@ export class CourseServiceService {
 
 
 
-    CourseById(IdCourse:string)
+    CourseById(IdCourse:number)
   {
     return this.http.get(`${environment.baseUrl}/Course/OneCourse/${IdCourse}`);
   }
@@ -46,6 +46,16 @@ export class CourseServiceService {
   }
   viewFile(courseId: number) {
     return this.http.get(`${environment.baseUrl}/Course/view/${courseId}`, { responseType: 'blob' });
+  }
+
+  pdfSupport()
+  {
+    return  this.http.get(`${environment.baseUrl}/Course/pdfsupport`);
+  }
+
+  imgSupport()
+  {
+    return  this.http.get(`${environment.baseUrl}/Course/imgsupport`);
   }
 
 

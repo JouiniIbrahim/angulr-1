@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './home/home.component';
 import { ConfirmAccountComponent } from './connexion/confirm-account/confirm-account.component';
 import { LoginComponent } from './connexion/login/login.component';
+import {TestRxJSComponent} from "./test-rx-js/test-rx-js.component";
 
 
 const routes: Routes = [
@@ -14,6 +15,7 @@ const routes: Routes = [
   { path: 'Administration', loadChildren: () => import('./administration/administration.module').then(m => m.AdministrationModule) },
   { path: 'Market', loadChildren: () => import('./market/market.module').then(m => m.MarketModule) },
   { path: 'connexion', loadChildren: () => import('./connexion/connexion.module').then(m => m.ConnexionModule) },
+  {path:"rxjs", component:TestRxJSComponent}
 
 ];
 

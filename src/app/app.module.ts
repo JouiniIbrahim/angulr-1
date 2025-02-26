@@ -25,6 +25,7 @@ import { ConfirmAccountComponent } from './connexion/confirm-account/confirm-acc
 import {TableModule} from "primeng/table";
 import {AdministrationModule} from "./administration/administration.module";
 import {ConnexionModule} from "./connexion/connexion.module";
+import { TestRxJSComponent } from './test-rx-js/test-rx-js.component';
 
 
 
@@ -33,6 +34,7 @@ import {ConnexionModule} from "./connexion/connexion.module";
     AppComponent,
     GenericModalComponent,
     HomeComponent,
+    TestRxJSComponent,
 
 
 

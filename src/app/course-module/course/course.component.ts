@@ -29,6 +29,7 @@ export class CourseComponent implements OnInit {
   showModal: boolean = false;
 
 
+
   courseFields = [
     {key: 'name', label: 'Name', type: 'text', options: null},
     {key: 'description', label: 'Description', type: 'textarea', options: null},
@@ -59,6 +60,40 @@ export class CourseComponent implements OnInit {
 
   GetList() {
     this.Service.AllCourses().subscribe(
+      (Res: any) => {
+        this.ListCourse = Res.map((el: any) => el ? {...el, published: new Date(el.published)} : null);
+        this.loading = false;
+        console.log(typeof (this.ListCourse[0].published));
+        console.log('List of Courses:', this.ListCourse);
+      },
+      (error: any) => {
+        console.log('Error fetching Courses:', error);
+        this.loading = false;
+      }
+    );
+
+
+  }
+
+  GetListPDF() {
+    this.Service.pdfSupport().subscribe(
+      (Res: any) => {
+        this.ListCourse = Res.map((el: any) => el ? {...el, published: new Date(el.published)} : null);
+        this.loading = false;
+        console.log(typeof (this.ListCourse[0].published));
+        console.log('List of Courses:', this.ListCourse);
+      },
+      (error: any) => {
+        console.log('Error fetching Courses:', error);
+        this.loading = false;
+      }
+    );
+
+
+  }
+
+  GetListIMG() {
+    this.Service.imgSupport().subscribe(
       (Res: any) => {
         this.ListCourse = Res.map((el: any) => el ? {...el, published: new Date(el.published)} : null);
         this.loading = false;
@@ -118,7 +153,6 @@ export class CourseComponent implements OnInit {
       },
       (error) => {
         console.error('Error downloading file:', error);
-
 
         if (error.error instanceof Blob) {
           const reader = new FileReader();

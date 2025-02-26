@@ -66,6 +66,12 @@
           <div>
             <button pButton icon="pi pi-pencil" label="Add Course" class="p-button-rounded p-button-lined"
                     (click)="openAddModal()"></button>
+              <button pButton icon="pi pi-list" label="Only PDF" class="p-button-rounded p-button-lined"
+                    (click)="GetListPDF()"></button>
+            <button pButton icon="pi pi-image" label="Only IMG" class="p-button-rounded p-button-lined"
+                    (click)="GetListIMG()"></button>
+            <button pButton icon="pi pi-list" label="All" class="p-button-rounded p-button-lined"
+                    (click)="GetList()"></button>
           </div>
         </div>
 
@@ -185,8 +191,8 @@
 
         <div class="modal-body">
           <div *ngIf="filePreview">
-  <!--<iframe  [src]="filePreview" width="100%" height="600px"></iframe>-->
-            <img *ngIf="filePreview?.type === 'image'" [src]="filePreview" width="100%"/>
+  <iframe  [src]="filePreview" width="100%" height="600px"></iframe>
+<!--            <img  [src]="filePreview" width="100%"/>-->
           </div>
         </div>
       </div>
