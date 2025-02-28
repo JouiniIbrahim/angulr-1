@@ -29,7 +29,6 @@ export class CourseComponent implements OnInit {
   showModal: boolean = false;
 
 
-
   courseFields = [
     {key: 'name', label: 'Name', type: 'text', options: null},
     {key: 'description', label: 'Description', type: 'textarea', options: null},
@@ -71,8 +70,6 @@ export class CourseComponent implements OnInit {
         this.loading = false;
       }
     );
-
-
   }
 
   GetListPDF() {
@@ -88,8 +85,6 @@ export class CourseComponent implements OnInit {
         this.loading = false;
       }
     );
-
-
   }
 
   GetListIMG() {
@@ -109,7 +104,7 @@ export class CourseComponent implements OnInit {
 
   }
 
-/*------------------------------------------file management----------------------------------------------*/
+  /*------------------------------------------file management----------------------------------------------*/
   displayFile(id: number) {
     this.Service.viewFile(id).subscribe(
       (fileBlob) => {

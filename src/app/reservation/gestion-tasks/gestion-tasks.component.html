@@ -1,0 +1,197 @@
+<div class="d-flex" id="wrapper" [ngClass]="{'toggled': sidebarCollapsed}">
+  <!-- Sidebar -->
+  <div class="border-end bg-white" id="sidebar-wrapper">
+    <div class="sidebar-heading border-bottom bg-light">Task Management</div>
+    <div class="list-group list-group-flush">
+      <a class="list-group-item list-group-item-action list-group-item-light p-3" routerLink="/tasks" aria-selected="true">Tasks</a>
+      <a class="list-group-item list-group-item-action list-group-item-light p-3" routerLink="/reservations">Reservations</a>
+      <a class="list-group-item list-group-item-action list-group-item-light p-3" routerLink="/clients">Clients</a>
+      <a class="list-group-item list-group-item-action list-group-item-light p-3" routerLink="/user">User</a>
+      <a class="list-group-item list-group-item-action list-group-item-light p-3" href="/market">Produit</a>
+      <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#!">Events</a>
+    </div>
+  </div>
+
+  <!-- Page Content Wrapper -->
+  <div id="page-content-wrapper">
+    <!-- Top Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+      <div class="container-fluid">
+        <button class="btn btn-primary" id="sidebarToggle" (click)="toggleSidebar()">Toggle Menu</button>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav ms-auto mt-2 mt-lg-0">
+            <li class="nav-item active"><a class="nav-link" routerLink="/">Home</a></li>
+            <li class="nav-item"><a class="nav-link" href="#!">Link</a></li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown"
+                 aria-haspopup="true" aria-expanded="false">Dropdown</a>
+              <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="#!">Action</a>
+                <a class="dropdown-item" href="#!">Another action</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#!">Something else here</a>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Page Content with Two Tables -->
+    <div class="container-fluid p-3">
+      <!-- Agency Tasks Table -->
+      <h3>Agency Tasks</h3>
+      <p-table
+        #agencyDt
+        [value]="agencyTasks"
+        dataKey="id"
+        [rows]="5"
+        [rowsPerPageOptions]="[5, 10, 15]"
+        [loading]="loading"
+        [paginator]="true"
+        sortMode="multiple"
+        [globalFilterFields]="['name']"
+        [tableStyle]="{'min-width': '50rem'}"
+      >
+        <ng-template pTemplate="caption">
+          <div class="flex1">
+            <span class="p-input-icon-left">
+              <i class="pi pi-search"></i>
+              <input pInputText type="text" (input)="agencyDt.filterGlobal($any($event.target).value, 'contains')"
+                     placeholder="Search by task name" />
+              <p-button icon="pi pi-filter-slash" class="p-button-rounded p-button-outlined" (click)="clear(agencyDt)" />
+            </span>
+            <button pButton icon="pi pi-plus" label="Add Task" class="p-button-rounded p-button-success"
+                    (click)="openAddModal()"></button>
+          </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+          <tr>
+            <th pSortableColumn="id" style="min-width:8rem">ID<p-sortIcon field="id"></p-sortIcon></th>
+            <th pSortableColumn="name" style="min-width:12rem">Name<p-sortIcon field="name"></p-sortIcon></th>
+            <th pSortableColumn="processInstanceId" style="min-width:15rem">Process Instance ID<p-sortIcon field="processInstanceId"></p-sortIcon></th>
+            <th pSortableColumn="createTime" style="min-width:12rem">Create Time<p-sortIcon field="createTime"></p-sortIcon></th>
+            <th style="min-width:12rem">Actions</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-task>
+          <tr>
+            <td>{{ task.id }}</td>
+            <td>{{ task.name }}</td>
+            <td>{{ task.processInstanceId }}</td>
+            <td>{{ task.createTime }}</td>
+            <td>
+              <button pButton type="button" icon="pi pi-eye" class="p-button-rounded p-button-outlined"
+                      (click)="viewTask(task.id)"></button>
+              <button pButton type="button" label="Approve" class="p-button-rounded p-button-success p-ml-2"
+                      (click)="approveTask(task.id)"></button>
+              <button pButton type="button" label="No" class="p-button-rounded p-button-danger p-ml-2"
+                      (click)="rejectTask(task.id)"></button>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="5">No agency tasks found.</td>
+          </tr>
+        </ng-template>
+      </p-table>
+
+      <!-- Hotel Tasks Table -->
+      <h3 class="p-mt-4">Hotel Tasks</h3>
+      <p-table
+        #hotelDt
+        [value]="hotelTasks"
+        dataKey="id"
+        [rows]="5"
+        [rowsPerPageOptions]="[5, 10, 15]"
+        [loading]="loading"
+        [paginator]="true"
+        sortMode="multiple"
+        [globalFilterFields]="['name']"
+        [tableStyle]="{'min-width': '50rem'}"
+      >
+        <ng-template pTemplate="caption">
+          <div class="flex1">
+            <span class="p-input-icon-left">
+              <i class="pi pi-search"></i>
+              <input pInputText type="text" (input)="hotelDt.filterGlobal($any($event.target).value, 'contains')"
+                     placeholder="Search by task name" />
+              <p-button icon="pi pi-filter-slash" class="p-button-rounded p-button-outlined" (click)="clear(hotelDt)" />
+            </span>
+          </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+          <tr>
+            <th pSortableColumn="id" style="min-width:8rem">ID<p-sortIcon field="id"></p-sortIcon></th>
+            <th pSortableColumn="name" style="min-width:12rem">Name<p-sortIcon field="name"></p-sortIcon></th>
+            <th pSortableColumn="processInstanceId" style="min-width:15rem">Process Instance ID<p-sortIcon field="processInstanceId"></p-sortIcon></th>
+            <th pSortableColumn="createTime" style="min-width:12rem">Create Time<p-sortIcon field="createTime"></p-sortIcon></th>
+            <th style="min-width:12rem">Actions</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-task>
+          <tr>
+            <td>{{ task.id }}</td>
+            <td>{{ task.name }}</td>
+            <td>{{ task.processInstanceId }}</td>
+            <td>{{ task.createTime }}</td>
+            <td>
+              <button pButton type="button" icon="pi pi-eye" class="p-button-rounded p-button-outlined"
+                      (click)="viewTask(task.id)"></button>
+              <button pButton type="button" label="Approve" class="p-button-rounded p-button-success p-ml-2"
+                      (click)="approveTask(task.id)"></button>
+              <button pButton type="button" label="No" class="p-button-rounded p-button-danger p-ml-2"
+                      (click)="rejectTask(task.id)"></button>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="5">No hotel tasks found.</td>
+          </tr>
+        </ng-template>
+      </p-table>
+
+      <div *ngIf="errorMessage && !loading" class="p-error text-center p-mt-3">
+        {{ errorMessage }}
+      </div>
+
+      <!-- Modal for Add/View Tasks -->
+      <p-dialog [header]="isViewMode ? 'View Task Details' : 'Add New Task'" [(visible)]="showModal" [modal]="true" [style]="{'width': '35rem'}">
+        <div class="p-fluid">
+          <div class="p-field">
+            <label for="name">Name</label>
+            <input pInputText id="name" [(ngModel)]="selectedTask.name" type="text" [disabled]="isViewMode" />
+          </div>
+          <div class="p-field">
+            <label for="processInstanceId">Process Instance ID</label>
+            <input pInputText id="processInstanceId" [(ngModel)]="selectedTask.processInstanceId" type="text" [disabled]="isViewMode" />
+          </div>
+          <div class="p-field">
+            <label for="taskDefinitionKey">Task Definition Key</label>
+            <input pInputText id="taskDefinitionKey" [(ngModel)]="selectedTask.taskDefinitionKey" type="text" [disabled]="isViewMode" />
+          </div>
+          <div class="p-field">
+            <label for="statut">Statut</label>
+            <p-dropdown id="statut" [options]="statuts" [(ngModel)]="selectedTask.statut" optionLabel="name"
+                        [disabled]="true" placeholder="Select a Status" [style]="{'width': '100%'}" [showClear]="false"></p-dropdown>
+          </div>
+          <div class="p-field">
+            <label for="client">Client</label>
+            <p-dropdown id="client" [options]="clients" [(ngModel)]="selectedClientId" optionLabel="nom" optionValue="id" [disabled]="isViewMode"
+                        placeholder="Select a Client" [style]="{'width': '100%'}" [showClear]="true"></p-dropdown>
+          </div>
+        </div>
+        <p-footer>
+          <button pButton type="button" label="Close" class="p-button-secondary" (click)="closeModal()"></button>
+
+        </p-footer>
+      </p-dialog>
+    </div>
+  </div>
+</div>

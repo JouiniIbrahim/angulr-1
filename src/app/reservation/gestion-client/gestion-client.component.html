@@ -1,0 +1,185 @@
+  <div class="d-flex" id="wrapper" [ngClass]="{'toggled': sidebarCollapsed}">
+    <!-- Sidebar -->
+    <div class="border-end bg-white" id="sidebar-wrapper">
+      <div class="sidebar-heading border-bottom bg-light">Client Management</div>
+      <div class="list-group list-group-flush">
+        <a class="list-group-item list-group-item-action list-group-item-light p-3" routerLink="/clients" aria-selected="true">Clients</a>
+        <a class="list-group-item list-group-item-action list-group-item-light p-3" routerLink="/user">User</a>
+        <a class="list-group-item list-group-item-action list-group-item-light p-3" href="/market">Produit</a>
+        <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#!">Events</a>
+        <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#!">Profile</a>
+        <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#!">Status</a>
+      </div>
+    </div>
+
+    <!-- Page Content Wrapper -->
+    <div id="page-content-wrapper">
+      <!-- Top Navigation -->
+      <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+        <div class="container-fluid">
+          <button class="btn btn-primary" id="sidebarToggle" (click)="toggleSidebar()">Toggle Menu</button>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                  aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ms-auto mt-2 mt-lg-0">
+              <li class="nav-item active"><a class="nav-link" routerLink="/">Home</a></li>
+              <li class="nav-item"><a class="nav-link" href="#!">Link</a></li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown"
+                   aria-haspopup="true" aria-expanded="false">Dropdown</a>
+                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                  <a class="dropdown-item" href="#!">Action</a>
+                  <a class="dropdown-item" href="#!">Another action</a>
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item" href="#!">Something else here</a>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+
+      <!-- Page Content with PrimeNG Table -->
+      <div class="container-fluid p-3">
+        <p-table
+          #dt
+          [value]="clients"
+          dataKey="id"
+          [rows]="5"
+          [rowsPerPageOptions]="[5, 10, 15]"
+          [loading]="loading"
+          [paginator]="true"
+          sortMode="multiple"
+          [globalFilterFields]="['nom', 'prenom', 'email', 'telephone']"
+          [tableStyle]="{'min-width': '50rem'}"
+        >
+          <!-- Caption with Search and Add Button -->
+          <ng-template pTemplate="caption">
+            <div class="flex1">
+              <span class="p-input-icon-left">
+                <i class="pi pi-search"></i>
+                <input pInputText type="text" (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+                       placeholder="Search clients" />
+                <p-button icon="pi pi-filter-slash" class="p-button-rounded p-button-outlined" (click)="clear(dt)" />
+              </span>
+              <button pButton icon="pi pi-plus" label="Add Client" class="p-button-rounded p-button-success"
+                      (click)="openAddModal()"></button>
+            </div>
+          </ng-template>
+
+          <!-- Table Header -->
+          <ng-template pTemplate="header">
+            <tr>
+              <th pSortableColumn="id" style="min-width:8rem">
+                <div class="flex items-center">
+                  <p-sortIcon field="id"></p-sortIcon>
+                  ID
+                  <p-columnFilter type="numeric" field="id" display="menu" />
+                </div>
+              </th>
+              <th pSortableColumn="nom" style="min-width:15rem">
+                <div class="flex items-center">
+                  <p-sortIcon field="nom"></p-sortIcon>
+                  Nom
+                  <p-columnFilter type="text" field="nom" display="menu" />
+                </div>
+              </th>
+              <th pSortableColumn="prenom" style="min-width:15rem">
+                <div class="flex items-center">
+                  <p-sortIcon field="prenom"></p-sortIcon>
+                  Prénom
+                  <p-columnFilter type="text" field="prenom" display="menu" />
+                </div>
+              </th>
+              <th pSortableColumn="email" style="min-width:15rem">
+                <div class="flex items-center">
+                  <p-sortIcon field="email"></p-sortIcon>
+                  Email
+                  <p-columnFilter type="text" field="email" display="menu" />
+                </div>
+              </th>
+              <th pSortableColumn="telephone" style="min-width:12rem">
+                <div class="flex items-center">
+                  <p-sortIcon field="telephone"></p-sortIcon>
+                  Téléphone
+                  <p-columnFilter type="text" field="telephone" display="menu" />
+                </div>
+              </th>
+              <th pSortableColumn="dateInscription" style="min-width:12rem">
+                <div class="flex items-center">
+                  <p-sortIcon field="dateInscription"></p-sortIcon>
+                  Date d'Inscription
+                  <p-columnFilter type="date" field="dateInscription" display="menu" />
+                </div>
+              </th>
+              <th style="min-width:10rem">Action</th>
+            </tr>
+          </ng-template>
+
+          <!-- Table Body -->
+          <ng-template pTemplate="body" let-client>
+            <tr>
+              <td>{{ client.id }}</td>
+              <td>{{ client.nom }}</td>
+              <td>{{ client.prenom }}</td>
+              <td>{{ client.email }}</td>
+              <td>{{ client.telephone }}</td>
+              <td>{{ client.dateInscription | date:'dd/MM/yyyy' }}</td>
+              <td>
+                <button pButton type="button" icon="pi pi-eye" class="p-button-rounded p-button-outlined"
+                        (click)="viewClient(client.id)"></button>
+                <button pButton type="button" icon="pi pi-pencil" class="p-button-rounded p-button-outlined"
+                        (click)="editClient(client.id)"></button>
+                <button pButton type="button" icon="pi pi-trash" class="p-button-rounded p-button-outlined"
+                        (click)="deleteClient(client.id)"></button>
+              </td>
+            </tr>
+          </ng-template>
+
+          <!-- Empty Message -->
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td colspan="7">No clients found.</td>
+            </tr>
+          </ng-template>
+        </p-table>
+
+        <!-- Error Message -->
+        <div *ngIf="errorMessage && !loading" class="p-error text-center p-mt-3">
+          {{ errorMessage }}
+        </div>
+
+        <!-- Dual-Purpose Modal -->
+        <p-dialog [header]="isViewMode ? 'View Client Details' : 'Add New Client'" [(visible)]="showModal" [modal]="true" [style]="{'width': '30rem'}">
+          <div class="p-fluid">
+            <div class="p-field">
+              <label for="nom">Nom</label>
+              <input pInputText id="nom" [(ngModel)]="selectedClient.nom" type="text" [disabled]="isViewMode" />
+            </div>
+            <div class="p-field">
+              <label for="prenom">Prénom</label>
+              <input pInputText id="prenom" [(ngModel)]="selectedClient.prenom" type="text" [disabled]="isViewMode" />
+            </div>
+            <div class="p-field">
+              <label for="email">Email</label>
+              <input pInputText id="email" [(ngModel)]="selectedClient.email" type="email" [disabled]="isViewMode" />
+            </div>
+            <div class="p-field">
+              <label for="telephone">Téléphone</label>
+              <input pInputText id="telephone" [(ngModel)]="selectedClient.telephone" type="text" [disabled]="isViewMode" />
+            </div>
+            <div *ngIf="isViewMode" class="p-field">
+              <label for="dateInscription">Date d'Inscription</label>
+              <input pInputText id="dateInscription" [(ngModel)]="selectedClient.dateInscription" type="date:'dd/MM/yyyy'" [disabled]="isViewMode" />
+            </div>
+          </div>
+          <p-footer>
+            <button pButton type="button" label="Close" class="p-button-secondary" (click)="closeModal()"></button>
+            <button *ngIf="!isViewMode" pButton type="button" label="Save" class="p-button-primary" (click)="saveClient()"></button>
+          </p-footer>
+        </p-dialog>
+      </div>
+    </div>
+  </div>

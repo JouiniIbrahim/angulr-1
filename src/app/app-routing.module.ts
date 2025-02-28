@@ -15,7 +15,8 @@ const routes: Routes = [
   { path: 'Administration', loadChildren: () => import('./administration/administration.module').then(m => m.AdministrationModule) },
   { path: 'Market', loadChildren: () => import('./market/market.module').then(m => m.MarketModule) },
   { path: 'connexion', loadChildren: () => import('./connexion/connexion.module').then(m => m.ConnexionModule) },
-  {path:"rxjs", component:TestRxJSComponent}
+  {path:"rxjs", component:TestRxJSComponent},
+  {path:'',loadChildren:()=> import('./reservation/reservation.module').then(m => m.ReservationModule)}
 
 ];
 
