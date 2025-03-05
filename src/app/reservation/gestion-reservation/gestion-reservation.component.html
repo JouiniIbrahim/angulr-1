@@ -4,10 +4,10 @@
     <div class="sidebar-heading border-bottom bg-light">Reservation Management</div>
     <div class="list-group list-group-flush">
       <a class="list-group-item list-group-item-action list-group-item-light p-3" routerLink="/reservations" aria-selected="true">Reservations</a>
-      <a class="list-group-item list-group-item-action list-group-item-light p-3" routerLink="/clients">Clients</a>
-      <a class="list-group-item list-group-item-action list-group-item-light p-3" routerLink="/user">User</a>
+      <a class="list-group-item list-group-item-action list-group-item-light p-3" routerLink="/client">Clients</a>
+      <a class="list-group-item list-group-item-action list-group-item-light p-3" routerLink="/task">Task</a>
       <a class="list-group-item list-group-item-action list-group-item-light p-3" href="/market">Produit</a>
-      <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#!">Events</a>
+      <a class="list-group-item list-group-item-action list-group-item-light p-3" href="/task"></a>
       <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#!">Profile</a>
     </div>
   </div>
@@ -116,7 +116,10 @@
             <td>{{ reservation.dateDebut | date:'dd/MM/yyyy' }}</td>
             <td>{{ reservation.dateFin | date:'dd/MM/yyyy' }}</td>
             <td>{{ reservation.prixTotal }}</td>
-            <td>{{ reservation.statut?.libelle || 'N/A' }}</td>
+            <td>
+              <p-tag [value]="getStatusLibelle(reservation.statutId)" [severity]="getSeverity(getStatusLibelle(reservation.statutId))" />
+            </td>
+<!--            <td>{{ getStatusLibelle(reservation.statutId) }}</td>-->
             <td>
               <button pButton type="button" icon="pi pi-eye" class="p-button-rounded p-button-outlined"
                       (click)="viewReservation(reservation.id)"></button>

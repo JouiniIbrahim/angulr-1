@@ -6,7 +6,7 @@ import {GestionTasksComponent} from "./gestion-tasks/gestion-tasks.component";
 
 const routes: Routes = [{ path: 'client', component: GestionClientComponent },
   { path: 'reservation', component: GestionReservationComponent },
-  { path: 'task', component: GestionTasksComponent }];
+  { path: 'task', component: GestionTasksComponent   }];
 //
 // { path: '', component:  }
 

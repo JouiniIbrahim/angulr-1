@@ -3,9 +3,9 @@
   <div class="border-end bg-white" id="sidebar-wrapper">
     <div class="sidebar-heading border-bottom bg-light">Task Management</div>
     <div class="list-group list-group-flush">
-      <a class="list-group-item list-group-item-action list-group-item-light p-3" routerLink="/tasks" aria-selected="true">Tasks</a>
-      <a class="list-group-item list-group-item-action list-group-item-light p-3" routerLink="/reservations">Reservations</a>
-      <a class="list-group-item list-group-item-action list-group-item-light p-3" routerLink="/clients">Clients</a>
+      <a class="list-group-item list-group-item-action list-group-item-light p-3" routerLink="/task" aria-selected="true">Tasks</a>
+      <a class="list-group-item list-group-item-action list-group-item-light p-3" routerLink="/reservation">Reservations</a>
+      <a class="list-group-item list-group-item-action list-group-item-light p-3" routerLink="/client">Clients</a>
       <a class="list-group-item list-group-item-action list-group-item-light p-3" routerLink="/user">User</a>
       <a class="list-group-item list-group-item-action list-group-item-light p-3" href="/market">Produit</a>
       <a class="list-group-item list-group-item-action list-group-item-light p-3" href="#!">Events</a>
@@ -41,7 +41,7 @@
       </div>
     </nav>
 
-    <!-- Page Content with Two Tables -->
+    <!-- Page Content with Four Tables -->
     <div class="container-fluid p-3">
       <!-- Agency Tasks Table -->
       <h3>Agency Tasks</h3>
@@ -65,8 +65,6 @@
                      placeholder="Search by task name" />
               <p-button icon="pi pi-filter-slash" class="p-button-rounded p-button-outlined" (click)="clear(agencyDt)" />
             </span>
-            <button pButton icon="pi pi-plus" label="Add Task" class="p-button-rounded p-button-success"
-                    (click)="openAddModal()"></button>
           </div>
         </ng-template>
         <ng-template pTemplate="header">
@@ -85,8 +83,6 @@
             <td>{{ task.processInstanceId }}</td>
             <td>{{ task.createTime }}</td>
             <td>
-              <button pButton type="button" icon="pi pi-eye" class="p-button-rounded p-button-outlined"
-                      (click)="viewTask(task.id)"></button>
               <button pButton type="button" label="Approve" class="p-button-rounded p-button-success p-ml-2"
                       (click)="approveTask(task.id)"></button>
               <button pButton type="button" label="No" class="p-button-rounded p-button-danger p-ml-2"
@@ -141,8 +137,6 @@
             <td>{{ task.processInstanceId }}</td>
             <td>{{ task.createTime }}</td>
             <td>
-              <button pButton type="button" icon="pi pi-eye" class="p-button-rounded p-button-outlined"
-                      (click)="viewTask(task.id)"></button>
               <button pButton type="button" label="Approve" class="p-button-rounded p-button-success p-ml-2"
                       (click)="approveTask(task.id)"></button>
               <button pButton type="button" label="No" class="p-button-rounded p-button-danger p-ml-2"
@@ -157,41 +151,104 @@
         </ng-template>
       </p-table>
 
+      <!-- Completed Agency Tasks Table -->
+      <h3 class="p-mt-4">Completed Agency Tasks</h3>
+      <p-table
+        #completedAgencyDt
+        [value]="completedAgencyTasks"
+        dataKey="id"
+        [rows]="5"
+        [rowsPerPageOptions]="[5, 10, 15]"
+        [loading]="loading"
+        [paginator]="true"
+        sortMode="multiple"
+        [globalFilterFields]="['name']"
+        [tableStyle]="{'min-width': '50rem'}"
+      >
+        <ng-template pTemplate="caption">
+          <div class="flex1">
+            <span class="p-input-icon-left">
+              <i class="pi pi-search"></i>
+              <input pInputText type="text" (input)="completedAgencyDt.filterGlobal($any($event.target).value, 'contains')"
+                     placeholder="Search by task name" />
+              <p-button icon="pi pi-filter-slash" class="p-button-rounded p-button-outlined" (click)="clear(completedAgencyDt)" />
+            </span>
+          </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+          <tr>
+            <th pSortableColumn="id" style="min-width:8rem">ID<p-sortIcon field="id"></p-sortIcon></th>
+            <th pSortableColumn="name" style="min-width:12rem">Name<p-sortIcon field="name"></p-sortIcon></th>
+            <th pSortableColumn="processInstanceId" style="min-width:15rem">Process Instance ID<p-sortIcon field="processInstanceId"></p-sortIcon></th>
+            <th pSortableColumn="createTime" style="min-width:12rem">Create Time<p-sortIcon field="createTime"></p-sortIcon></th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-task>
+          <tr>
+            <td>{{ task.id }}</td>
+            <td>{{ task.name }}</td>
+            <td>{{ task.processInstanceId }}</td>
+            <td>{{ task.createTime }}</td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="5">No completed agency tasks found.</td>
+          </tr>
+        </ng-template>
+      </p-table>
+
+      <!-- Completed Hotel Tasks Table -->
+      <h3 class="p-mt-4">Completed Hotel Tasks</h3>
+      <p-table
+        #completedHotelDt
+        [value]="completedHotelTasks"
+        dataKey="id"
+        [rows]="5"
+        [rowsPerPageOptions]="[5, 10, 15]"
+        [loading]="loading"
+        [paginator]="true"
+        sortMode="multiple"
+        [globalFilterFields]="['name']"
+        [tableStyle]="{'min-width': '50rem'}"
+      >
+        <ng-template pTemplate="caption">
+          <div class="flex1">
+            <span class="p-input-icon-left">
+              <i class="pi pi-search"></i>
+              <input pInputText type="text" (input)="completedHotelDt.filterGlobal($any($event.target).value, 'contains')"
+                     placeholder="Search by task name" />
+              <p-button icon="pi pi-filter-slash" class="p-button-rounded p-button-outlined" (click)="clear(completedHotelDt)" />
+            </span>
+          </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+          <tr>
+            <th pSortableColumn="id" style="min-width:8rem">ID<p-sortIcon field="id"></p-sortIcon></th>
+            <th pSortableColumn="name" style="min-width:12rem">Name<p-sortIcon field="name"></p-sortIcon></th>
+            <th pSortableColumn="processInstanceId" style="min-width:15rem">Process Instance ID<p-sortIcon field="processInstanceId"></p-sortIcon></th>
+            <th pSortableColumn="createTime" style="min-width:12rem">Create Time<p-sortIcon field="createTime"></p-sortIcon></th>
+
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-task>
+          <tr>
+            <td>{{ task.id }}</td>
+            <td>{{ task.name }}</td>
+            <td>{{ task.processInstanceId }}</td>
+            <td>{{ task.createTime }}</td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="5">No completed hotel tasks found.</td>
+          </tr>
+        </ng-template>
+      </p-table>
+
       <div *ngIf="errorMessage && !loading" class="p-error text-center p-mt-3">
         {{ errorMessage }}
       </div>
-
-      <!-- Modal for Add/View Tasks -->
-      <p-dialog [header]="isViewMode ? 'View Task Details' : 'Add New Task'" [(visible)]="showModal" [modal]="true" [style]="{'width': '35rem'}">
-        <div class="p-fluid">
-          <div class="p-field">
-            <label for="name">Name</label>
-            <input pInputText id="name" [(ngModel)]="selectedTask.name" type="text" [disabled]="isViewMode" />
-          </div>
-          <div class="p-field">
-            <label for="processInstanceId">Process Instance ID</label>
-            <input pInputText id="processInstanceId" [(ngModel)]="selectedTask.processInstanceId" type="text" [disabled]="isViewMode" />
-          </div>
-          <div class="p-field">
-            <label for="taskDefinitionKey">Task Definition Key</label>
-            <input pInputText id="taskDefinitionKey" [(ngModel)]="selectedTask.taskDefinitionKey" type="text" [disabled]="isViewMode" />
-          </div>
-          <div class="p-field">
-            <label for="statut">Statut</label>
-            <p-dropdown id="statut" [options]="statuts" [(ngModel)]="selectedTask.statut" optionLabel="name"
-                        [disabled]="true" placeholder="Select a Status" [style]="{'width': '100%'}" [showClear]="false"></p-dropdown>
-          </div>
-          <div class="p-field">
-            <label for="client">Client</label>
-            <p-dropdown id="client" [options]="clients" [(ngModel)]="selectedClientId" optionLabel="nom" optionValue="id" [disabled]="isViewMode"
-                        placeholder="Select a Client" [style]="{'width': '100%'}" [showClear]="true"></p-dropdown>
-          </div>
-        </div>
-        <p-footer>
-          <button pButton type="button" label="Close" class="p-button-secondary" (click)="closeModal()"></button>
-
-        </p-footer>
-      </p-dialog>
     </div>
   </div>
 </div>

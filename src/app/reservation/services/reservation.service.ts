@@ -61,5 +61,10 @@ export class ReservationService {
     return this.http.post(`${environment.baseUrl}/reservation/agence-manager`, taskApprovalDTO);
   }
 
+  CompletedTasks():Observable<any>
+  {
+    return this.http.get(`${environment.baseUrl}/reservation/completed-tasks`);
+  }
+
 
 }

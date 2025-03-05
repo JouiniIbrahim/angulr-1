@@ -1,9 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Table } from 'primeng/table';
-import {Task} from "../models/Task";
-import {StatutReservation} from "../models/StatutReservation";
-import {Client} from "../models/Client";
-import {ReservationService} from "../services/reservation.service";
+import { Task } from "../models/Task";
+import { StatutReservation } from "../models/StatutReservation";
+import { Client } from "../models/Client";
+import { ReservationService } from "../services/reservation.service";
 
 @Component({
   selector: 'app-gestion-tasks',
@@ -13,25 +13,24 @@ import {ReservationService} from "../services/reservation.service";
 export class GestionTasksComponent implements OnInit {
   @ViewChild('agencyDt') agencyDt: Table | undefined;
   @ViewChild('hotelDt') hotelDt: Table | undefined;
+  @ViewChild('completedAgencyDt') completedAgencyDt: Table | undefined;
+  @ViewChild('completedHotelDt') completedHotelDt: Table | undefined;
 
   agencyTasks: Task[] = [];
   hotelTasks: Task[] = [];
-  clients: Client[] = [];
-  selectedClientId: number | null = null;
-  statuts: StatutReservation[] = [];
+  completedAgencyTasks: Task[] = [];
+  completedHotelTasks: Task[] = [];
   loading: boolean = false;
   errorMessage: string | null = null;
   sidebarCollapsed: boolean = false;
-  showModal: boolean = false;
-  selectedTask: Task = new Task();
-  isViewMode: boolean = false;
 
   constructor(private service: ReservationService) {}
 
   ngOnInit(): void {
-    this.getTaskList();
-    this.getClientList();
-    this.getStatutList();
+    this.getTaskList(); // Current tasks
+    this.getCompletedTaskList(); // Completed tasks
+    // this.getClientList();
+    // this.getStatutList();
   }
 
   getTaskList(): void {
@@ -40,44 +39,45 @@ export class GestionTasksComponent implements OnInit {
 
     this.service.AllTasks().subscribe({
       next: (response: Task[]) => {
+        console.log('Current tasks response:', response);
         this.agencyTasks = response.filter(task => task.taskDefinitionKey?.startsWith('Agence'));
-        this.hotelTasks = response.filter(task => task.taskDefinitionKey?.startsWith('Hotel'));
+        this.hotelTasks = response.filter(task => task.taskDefinitionKey?.startsWith('Activity'));
+        console.log('Agency tasks:', this.agencyTasks);
+        console.log('Hotel tasks:', this.hotelTasks);
         this.loading = false;
       },
       error: (error) => {
-        this.errorMessage = 'Error loading tasks: ' + error.message;
+        this.errorMessage = 'Error loading current tasks: ' + error.message;
         this.loading = false;
-        console.error('Error fetching tasks:', error);
+        console.error('Error fetching current tasks:', error);
       }
     });
   }
 
-  getClientList(): void {
-    this.service.AllClients().subscribe({
-      next: (response: Client[]) => {
-        this.clients = response;
+  getCompletedTaskList(): void {
+    this.loading = true;
+    this.errorMessage = null;
+
+    this.service.CompletedTasks().subscribe({
+      next: (response: Task[]) => {
+        console.log('Completed tasks response:', response);
+        this.completedAgencyTasks = response.filter(task => task.taskDefinitionKey?.startsWith('Agence'));
+        this.completedHotelTasks = response.filter(task => task.name?.startsWith('Hotel'));
+        console.log('Completed Agency tasks:', this.completedAgencyTasks);
+        console.log('Completed Hotel tasks:', this.completedHotelTasks);
+        this.loading = false;
       },
       error: (error) => {
-        this.errorMessage = 'Error loading clients: ' + error.message;
-        console.error('Error fetching clients:', error);
+        this.errorMessage = 'Error loading completed tasks: ' + error.message;
+        this.loading = false;
+        console.error('Error fetching completed tasks:', error);
       }
     });
   }
 
-  getStatutList(): void {
-    this.service.AllStatuts().subscribe({
-      next: (response: StatutReservation[]) => {
-        this.statuts = response;
-        if (!this.isViewMode && this.showModal) {
-          this.selectedTask.statut = this.statuts.find(s => s.id === 1) || null;
-        }
-      },
-      error: (error) => {
-        this.errorMessage = 'Error loading statuses: ' + error.message;
-        console.error('Error fetching statuses:', error);
-      }
-    });
-  }
+
+
+
 
   toggleSidebar(): void {
     this.sidebarCollapsed = !this.sidebarCollapsed;
@@ -87,38 +87,15 @@ export class GestionTasksComponent implements OnInit {
     table.clear();
   }
 
-  openAddModal(): void {
-    this.selectedTask = new Task();
-    this.selectedClientId = null;
-    this.selectedTask.statut = this.statuts.find(s => s.id === 1) || null;
-    this.isViewMode = false;
-    this.showModal = true;
-  }
-
-  viewTask(id: string | null): void {
-    const task = [...this.agencyTasks, ...this.hotelTasks].find(t => t.id === id);
-    if (task) {
-      this.selectedTask = { ...task, statut: null, client: null };
-      this.selectedClientId = null;
-      this.isViewMode = true;
-      this.showModal = true;
-    } else {
-      this.errorMessage = 'Task not found';
-    }
-  }
-
-  closeModal(): void {
-    this.showModal = false;
-  }
-
-
-
   approveTask(taskId: string | null): void {
     if (taskId) {
       const task = [...this.agencyTasks, ...this.hotelTasks].find(t => t.id === taskId);
       if (task && task.processInstanceId) {
         this.service.updateTaskStatus(taskId, task.processInstanceId, true).subscribe({
-          next: () => this.getTaskList(),
+          next: (updatedTask: Task) => {
+            console.log('Approved task response:', updatedTask);
+            this.updateTaskLists(taskId, updatedTask);
+          },
           error: (error) => {
             this.errorMessage = 'Error approving task: ' + error.message;
             console.error('Error approving task:', error);
@@ -134,8 +111,12 @@ export class GestionTasksComponent implements OnInit {
     if (taskId) {
       const task = [...this.agencyTasks, ...this.hotelTasks].find(t => t.id === taskId);
       if (task && task.processInstanceId) {
-        this.service.updateTaskStatus(taskId, task.processInstanceId, false).subscribe({
-          next: () => this.getTaskList(),
+        this.service.updateTaskStatus(taskId, task.processInstanceId, false).subscribe(
+          {
+          next: (updatedTask: Task) => {
+            console.log('Rejected task response:', updatedTask);
+            this.updateTaskLists(taskId, updatedTask);
+          },
           error: (error) => {
             this.errorMessage = 'Error rejecting task: ' + error.message;
             console.error('Error rejecting task:', error);
@@ -144,6 +125,22 @@ export class GestionTasksComponent implements OnInit {
       } else {
         this.errorMessage = 'Task or processInstanceId not found';
       }
+    }
+  }
+
+
+
+  private updateTaskLists(taskId: string, updatedTask: Task): void {
+    const isAgency = updatedTask.taskDefinitionKey?.startsWith('Agence');
+    const isHotel = updatedTask.taskDefinitionKey?.startsWith('Activity');
+
+    // Remove from active lists and add to completed lists
+    this.agencyTasks = this.agencyTasks.filter(t => t.id !== taskId);
+    this.hotelTasks = this.hotelTasks.filter(t => t.id !== taskId);
+    if (isAgency) {
+      this.completedAgencyTasks = [...this.completedAgencyTasks, updatedTask];
+    } else if (isHotel) {
+      this.completedHotelTasks = [...this.completedHotelTasks, updatedTask];
     }
   }
 

@@ -127,6 +127,23 @@ export class GestionReservationComponent implements OnInit {
       });
     }
   }
+  getStatusLibelle(statutId: number): any {
+    const status = this.statuts.find(s => s.id === statutId);
+    return status ? status.libelle : "N/A";
+  }
+
+  // @ts-ignore
+  getSeverity(status: string):any {
+    switch (status) {
+      case 'CONFIRMÉE':
+        return 'success';
+      case 'EN_ATTENTE':
+        return 'warn';
+      case 'ANNULÉE':
+        return 'danger';
+    }
+  }
+
 
   editReservation(id: number | null): void {
     console.log('Edit reservation:', id);
