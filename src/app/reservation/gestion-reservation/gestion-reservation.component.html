@@ -3,7 +3,7 @@
   <div class="border-end bg-white" id="sidebar-wrapper">
     <div class="sidebar-heading border-bottom bg-light">Reservation Management</div>
     <div class="list-group list-group-flush">
-      <a class="list-group-item list-group-item-action list-group-item-light p-3" routerLink="/reservations" aria-selected="true">Reservations</a>
+      <a class="list-group-item list-group-item-action list-group-item-light p-3" routerLink="/reservation" aria-selected="true">Reservations</a>
       <a class="list-group-item list-group-item-action list-group-item-light p-3" routerLink="/client">Clients</a>
       <a class="list-group-item list-group-item-action list-group-item-light p-3" routerLink="/task">Task</a>
       <a class="list-group-item list-group-item-action list-group-item-light p-3" href="/market">Produit</a>
@@ -47,7 +47,10 @@
         #dt
         [value]="reservations"
         dataKey="id"
-        [rows]="5"
+        [rows]="rows"
+        [lazy]="true"
+        [totalRecords]="totalRecords"
+        (onLazyLoad)="onPageChange($event)"
         [rowsPerPageOptions]="[5, 10, 15]"
         [loading]="loading"
         [paginator]="true"

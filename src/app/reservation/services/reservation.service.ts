@@ -1,11 +1,12 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpParams} from "@angular/common/http";
 import {environment} from "../../../environments/environment";
 import {Observable} from "rxjs";
 import {Reservation} from "../models/Reservation";
 import {StatutReservation} from "../models/StatutReservation";
 import {Client} from "../models/Client";
 import {Task} from "../models/Task";
+import {Page} from "../models/Page";
 
 @Injectable({
   providedIn: 'root'
@@ -27,8 +28,11 @@ export class ReservationService {
 
   /*----------------------  Client Service ----------------------*/
 
-  AllReservations(): Observable<Reservation[]> {
-    return this.http.get<Reservation[]>(`${environment.baseUrl}/reservation/all`);
+  getReservations(page: number, size: number): Observable<Page<Reservation>> {
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString());
+    return this.http.get<Page<Reservation>>(`${environment.baseUrl}/reservations/all`, { params });
   }
 
   AddReservation(data: {
@@ -58,7 +62,7 @@ export class ReservationService {
       processInstanceId,
       approved
     };
-    return this.http.post(`${environment.baseUrl}/reservation/agence-manager`, taskApprovalDTO);
+    return this.http.post(`${environment.baseUrl}/reservation/agence-manager`, taskApprovalDTO, { responseType: 'text' });
   }
 
   CompletedTasks():Observable<any>

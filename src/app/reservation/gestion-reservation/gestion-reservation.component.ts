@@ -4,6 +4,7 @@ import { Table } from 'primeng/table';
 import {Reservation} from "../models/Reservation";
 import {StatutReservation} from "../models/StatutReservation";
 import {Client} from "../models/Client";
+import {Page} from "../models/Page";
 
 @Component({
   selector: 'app-gestion-reservation',
@@ -23,22 +24,44 @@ export class GestionReservationComponent implements OnInit {
   showModal: boolean = false;
   selectedReservation: Reservation = new Reservation();
   isViewMode: boolean = false;
+  totalRecords: number = 0;
+  rows: number = 5; // Default page size (matches your test)
+  currentPage: number = 0;
 
   constructor(private service: ReservationService) {}
 
   ngOnInit(): void {
-    this.getReservationList();
+    // this.getReservationList();
     this.getClientList();
     this.getStatutList();
   }
 
-  getReservationList(): void {
+  // getReservationList(): void {
+  //   this.loading = true;
+  //   this.errorMessage = null;
+  //
+  //   this.service.AllReservations().subscribe({
+  //     next: (response: Reservation[]) => {
+  //       this.reservations = response;
+  //       this.loading = false;
+  //     },
+  //     error: (error) => {
+  //       this.errorMessage = 'Error loading reservations: ' + error.message;
+  //       this.loading = false;
+  //       console.error('Error fetching reservations:', error);
+  //     }
+  //   });
+  // }
+
+  loadReservations(page: number, size: number): void {
     this.loading = true;
     this.errorMessage = null;
 
-    this.service.AllReservations().subscribe({
-      next: (response: Reservation[]) => {
-        this.reservations = response;
+    this.service.getReservations(page, size).subscribe({
+      next: (response: Page<Reservation>) => {
+        this.reservations = response.content;
+        this.totalRecords = response.totalElements;
+        this.currentPage = response.number;
         this.loading = false;
       },
       error: (error) => {
@@ -47,6 +70,12 @@ export class GestionReservationComponent implements OnInit {
         console.error('Error fetching reservations:', error);
       }
     });
+  }
+
+  onPageChange(event: any): void {
+    this.currentPage = event.page; // PrimeNG page index (0-based)
+    this.rows = event.rows; // Rows per page
+    this.loadReservations(this.currentPage, this.rows);
   }
 
   getClientList(): void {
@@ -96,7 +125,7 @@ export class GestionReservationComponent implements OnInit {
     const reservation = this.reservations.find(r => r.id === id);
     if (reservation) {
       this.selectedReservation = { ...reservation, statut: null, client: null };
-      this.selectedClientId = null;
+      this.selectedReservation.client = null;
       this.isViewMode = true;
       this.showModal = true;
     } else {
@@ -117,7 +146,6 @@ export class GestionReservationComponent implements OnInit {
       };
       this.service.AddReservation(reservationToSave).subscribe({
         next: () => {
-          this.getReservationList();
           this.closeModal();
         },
         error: (error) => {

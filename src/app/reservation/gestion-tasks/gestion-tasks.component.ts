@@ -95,6 +95,7 @@ export class GestionTasksComponent implements OnInit {
           next: (updatedTask: Task) => {
             console.log('Approved task response:', updatedTask);
             this.updateTaskLists(taskId, updatedTask);
+            this.getTaskList();
           },
           error: (error) => {
             this.errorMessage = 'Error approving task: ' + error.message;
